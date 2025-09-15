@@ -22,7 +22,11 @@ termux_parse_alternatives() {
 
 		if (( dependents )); then
 			read -r dep_link dep_name dep_alternative <<< "$line"
-			DEPENDENTS[${NAME[-1]}]+="      --slave \"${TERMUX_PREFIX}/${dep_link}\" \"${dep_name}\" \"${TERMUX_PREFIX}/${dep_alternative}\""$' \\\n'
+			if [ "${TERMUX_PACKAGE_FORMAT}" = "pacman" ]; then
+				DEPENDENTS[${NAME[-1]}]+=" ${dep_link}:${dep_alternative}"
+			else
+				DEPENDENTS[${NAME[-1]}]+="      --slave \"${TERMUX_PREFIX}/${dep_link}\" \"${dep_name}\" \"${TERMUX_PREFIX}/${dep_alternative}\""$' \\\n'
+			fi
 		fi
 
 	done < <(sed -e 's|\s*#.*$||g' "$1") # Strip out any comments
@@ -36,9 +40,6 @@ termux_step_update_alternatives() {
 		local -A DEPENDENTS=() LINK=() ALTERNATIVE=() PRIORITY=()
 		termux_parse_alternatives "$alternatives_file"
 
-		# Handle postinst script
-		[[ -f postinst ]] && mv postinst{,.orig}
-
 		local name
 		for name in "${NAME[@]}"; do
 			# Not every entry will have dependents in its group
@@ -46,12 +47,31 @@ termux_step_update_alternatives() {
 			: "${DEPENDENTS[$name]:=}"
 		done
 
+		if [ "${TERMUX_PACKAGE_FORMAT}" = "pacman" ]; then
+			(
+				cd "$TERMUX_PKG_MASSAGEDIR/$TERMUX_PREFIX_CLASSICAL"
+				mkdir -p ./share/pacman-switch
+				{
+					for name in "${NAME[@]}"; do
+						echo "switcher_group_${name}() {"
+						echo "  priority=${PRIORITY[$name]}"
+						echo "  points=(${LINK[$name]}:${ALTERNATIVE[$name]}${DEPENDENTS[$name]})"
+						echo "}"
+					done
+				} > "./share/pacman-switch/$(basename "${alternatives_file//.alternatives/.sw}")"
+			)
+			continue
+		fi
+
+		# Handle postinst script
+		[[ -f postinst ]] && mv postinst{,.orig}
+
 		{ # Splice in the alternatives
 		# Use the original shebang if there's a 'postinst.orig'
 		[[ -f postinst.orig ]] && head -n1 postinst.orig || echo "#!${TERMUX_PREFIX}/bin/sh"
 		# Boilerplate header comment and checks
 		echo "# Automatically added by termux_step_update_alternatives"
-		echo "if [ \"\$1\" = 'configure' ] || [ \"\$1\" = 'abort-upgrade' ] || [ \"\$1\" = 'abort-deconfigure' ] || [ \"\$1\" = 'abort-remove' ] || [ \"${TERMUX_PACKAGE_FORMAT}\" = 'pacman' ]; then"
+		echo "if [ \"\$1\" = 'configure' ] || [ \"\$1\" = 'abort-upgrade' ] || [ \"\$1\" = 'abort-deconfigure' ] || [ \"\$1\" = 'abort-remove' ]; then"
 		echo "  if [ -x \"${TERMUX_PREFIX}/bin/update-alternatives\" ]; then"
 		# 'update-alternatives' command for each group
 		for name in "${NAME[@]}"; do
@@ -86,7 +106,7 @@ termux_step_update_alternatives() {
 		[[ -f prerm.orig ]] && head -n1 prerm.orig || echo "#!${TERMUX_PREFIX}/bin/sh"
 		# Boilerplate header comment and checks
 		echo "# Automatically added by termux_step_update_alternatives"
-		echo "if [ \"\$1\" = 'remove' ] || [ \"\$1\" != 'upgrade' ] || [ \"${TERMUX_PACKAGE_FORMAT}\" = 'pacman' ]; then"
+		echo "if [ \"\$1\" = 'remove' ] || [ \"\$1\" != 'upgrade' ]; then"
 		echo "  if [ -x \"${TERMUX_PREFIX}/bin/update-alternatives\" ]; then"
 		# Remove each group
 		for name in "${NAME[@]}"; do
