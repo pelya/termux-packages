@@ -68,13 +68,13 @@ PACKAGES+=" xmltoman"
 PACKAGES+=" python3-pip"
 PACKAGES+=" python3-setuptools"
 PACKAGES+=" python-wheel-common"
-PACKAGES+=" python3.12-venv"
+PACKAGES+=" pyenv"
 
 # Needed by package bc.
 PACKAGES+=" ed"
 
 # Needed by gnunet.
-PACKAGES+=" recutils"
+#PACKAGES+=" recutils"
 
 # Provides utility hexdump which is needed by package bitcoin.
 PACKAGES+=" bsdmainutils"
@@ -216,7 +216,7 @@ PACKAGES+=" gtk-doc-tools"
 PACKAGES+=" happy"
 PACKAGES+=" itstool"
 PACKAGES+=" libdbus-glib-1-dev-bin"
-PACKAGES+=" libgdk-pixbuf2.0-dev"
+PACKAGES+=" libgdk-pixbuf-xlib-2.0-dev"
 PACKAGES+=" python3-html5lib"
 PACKAGES+=" python3-xcbgen"
 PACKAGES+=" sassc"
@@ -391,3 +391,5 @@ cd -
 rm -Rf /tmp/pkgconf-build
 # Prevent package from being upgraded and overwriting our manual installation:
 $SUDO apt-mark hold pkgconf
+
+pyenv install 3.12.9
