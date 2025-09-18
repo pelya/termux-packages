@@ -1,0 +1,15 @@
+Only in src-old: commands-aarch64-termux-root.h
+diff -u -r src-old/generate-db.js src/generate-db.js
+--- src-old/generate-db.js	2025-07-01 11:12:10.000000000 +0300
++++ src/generate-db.js	2025-09-16 15:03:58.678858864 +0300
+@@ -6,7 +6,9 @@
+ 
+ const gunzipAsync = promisify(gunzip);
+ 
+-const { TERMUX_SCRIPTDIR, TERMUX_PREFIX, TERMUX_ARCH } = process.env;
++const { TERMUX_SCRIPTDIR, TERMUX_ARCH } = process.env;
++
++const TERMUX_PREFIX = "/data/data/com.termux/files/usr";
+ 
+ if (!TERMUX_SCRIPTDIR) {
+   throw new Error("TERMUX_PKG_CACHEDIR environment variable is not defined");

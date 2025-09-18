@@ -12,6 +12,7 @@ TERMUX_PKG_UPDATE_TAG_TYPE="newest-tag"
 TERMUX_PKG_BREAKS="termux-keyring (<< 1.9)"
 TERMUX_PKG_CONFLICTS="procps (<< 3.3.15-2)"
 TERMUX_PKG_SUGGESTS="termux-api"
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS="TERMUX_APP_PACKAGE=$TERMUX_APP_PACKAGE"
 
 # Some of these packages are not dependencies and used only to ensure
 # that core packages are installed after upgrading (we removed busybox

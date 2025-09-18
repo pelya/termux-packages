@@ -58,7 +58,7 @@ read_package_list_deb() {
 	local architecture
 	for architecture in all "$1"; do
 		if [ ! -e "${BOOTSTRAP_TMPDIR}/packages.${architecture}" ]; then
-			echo "[*] Downloading package list for architecture '${architecture}'..."
+			echo "[*] Downloading package list for architecture '${architecture}' from ${REPO_BASE_URL}/dists/stable/main/binary-${architecture}/Packages"
 			if ! curl --fail --location \
 				--output "${BOOTSTRAP_TMPDIR}/packages.${architecture}" \
 				"${REPO_BASE_URL}/dists/stable/main/binary-${architecture}/Packages"; then
@@ -125,6 +125,12 @@ pull_package() {
 			echo "[!] Failed to determine URL for package '$package_name'."
 			exit 1
 		fi
+		# Read from local compiled .deb files
+		package_url="file://$TERMUX_SCRIPTDIR/output/$(basename $(echo "${PACKAGE_METADATA[${package_name}]}" | grep -i "^Filename:" | awk '{ print $2 }'))"
+		# Replace versin number for one specific package
+		if [ "${package_url}" = "file://$TERMUX_SCRIPTDIR/output/termux-am_0.8.0-2_all.deb" ]; then
+			package_url="file://$TERMUX_SCRIPTDIR/output/termux-am_0.8.1-pelya-2_all.deb"
+		fi
 
 		local package_dependencies
 		package_dependencies=$(
@@ -145,8 +151,8 @@ pull_package() {
 		fi
 
 		if [ ! -e "$package_tmpdir/package.deb" ]; then
-			echo "[*] Downloading '$package_name'..."
-			curl --fail --location --output "$package_tmpdir/package.deb" "$package_url"
+			echo "[*] Downloading '$package_name' from $package_url"
+			curl --fail --location --output "$package_tmpdir/package.deb" "$package_url" || exit 1
 
 			echo "[*] Extracting '$package_name'..."
 			(cd "$package_tmpdir"
@@ -265,13 +271,13 @@ add_termux_bootstrap_second_stage_files() {
 	chmod 700 "${BOOTSTRAP_ROOTFS}/${TERMUX_BOOTSTRAP__BOOTSTRAP_SECOND_STAGE_DIR}/$TERMUX_BOOTSTRAP__BOOTSTRAP_SECOND_STAGE_ENTRY_POINT_SUBFILE"
 
 	# TODO: Remove it when Termux app supports `pacman` bootstraps installation.
-	sed -e "s|@TERMUX_PREFIX@|${TERMUX_PREFIX}|g" \
-		-e "s|@TERMUX__PREFIX__PROFILE_D_DIR@|${TERMUX__PREFIX__PROFILE_D_DIR}|g" \
-		-e "s|@TERMUX_BOOTSTRAP__BOOTSTRAP_SECOND_STAGE_DIR@|${TERMUX_BOOTSTRAP__BOOTSTRAP_SECOND_STAGE_DIR}|g" \
-		-e "s|@TERMUX_BOOTSTRAP__BOOTSTRAP_SECOND_STAGE_ENTRY_POINT_SUBFILE@|${TERMUX_BOOTSTRAP__BOOTSTRAP_SECOND_STAGE_ENTRY_POINT_SUBFILE}|g" \
-		"$TERMUX_SCRIPTDIR/scripts/bootstrap/01-termux-bootstrap-second-stage-fallback.sh" \
-		> "${BOOTSTRAP_ROOTFS}/${TERMUX__PREFIX__PROFILE_D_DIR}/01-termux-bootstrap-second-stage-fallback.sh"
-	chmod 600 "${BOOTSTRAP_ROOTFS}/${TERMUX__PREFIX__PROFILE_D_DIR}/01-termux-bootstrap-second-stage-fallback.sh"
+	#sed -e "s|@TERMUX_PREFIX@|${TERMUX_PREFIX}|g" \
+	#	-e "s|@TERMUX__PREFIX__PROFILE_D_DIR@|${TERMUX__PREFIX__PROFILE_D_DIR}|g" \
+	#	-e "s|@TERMUX_BOOTSTRAP__BOOTSTRAP_SECOND_STAGE_DIR@|${TERMUX_BOOTSTRAP__BOOTSTRAP_SECOND_STAGE_DIR}|g" \
+	#	-e "s|@TERMUX_BOOTSTRAP__BOOTSTRAP_SECOND_STAGE_ENTRY_POINT_SUBFILE@|${TERMUX_BOOTSTRAP__BOOTSTRAP_SECOND_STAGE_ENTRY_POINT_SUBFILE}|g" \
+	#	"$TERMUX_SCRIPTDIR/scripts/bootstrap/01-termux-bootstrap-second-stage-fallback.sh" \
+	#	> "${BOOTSTRAP_ROOTFS}/${TERMUX__PREFIX__PROFILE_D_DIR}/01-termux-bootstrap-second-stage-fallback.sh"
+	#chmod 600 "${BOOTSTRAP_ROOTFS}/${TERMUX__PREFIX__PROFILE_D_DIR}/01-termux-bootstrap-second-stage-fallback.sh"
 
 }
 
@@ -451,7 +457,7 @@ for package_arch in "${TERMUX_ARCHITECTURES[@]}"; do
 
 	# Core utilities.
 	pull_package bash # Used by `termux-bootstrap-second-stage.sh`
-	pull_package bzip2
+	pull_package libbz2
 	if ! ${BOOTSTRAP_ANDROID10_COMPATIBLE}; then
 		pull_package command-not-found
 	else
