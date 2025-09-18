@@ -1,3 +1,3 @@
 #!/bin/sh
 
-scripts/run-docker.sh ./build-bootstrap.sh  --architectures aarch64 2>&1 | tee z-build-bootstrap.log
+scripts/run-docker.sh scripts/build-bootstraps.sh --architectures aarch64 2>&1 | tee z-build-bootstrap.log
