@@ -45,4 +45,4 @@ PACKAGES+=("unzip")
 PACKAGES+=("termux-am")
 PACKAGES+=("termux-am-socket")
 
-./build-package.sh -a aarch64 "${PACKAGES[@]}" 2>&1 | tee z-build.log
+scripts/run-docker.sh ./build-package.sh -a aarch64 "${PACKAGES[@]}" 2>&1 | tee z-build.log
