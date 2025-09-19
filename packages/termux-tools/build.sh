@@ -23,6 +23,9 @@ TERMUX_PKG_DEPENDS="bzip2, coreutils, curl, dash, diffutils, findutils, gawk, gr
 TERMUX_PKG_RECOMMENDS="ed, dos2unix, inetutils, net-tools, patch, unzip"
 
 termux_step_pre_configure() {
+	# Patch does not work, because the build system replaces @TERMUX_APP_PACKAGE@
+	# Eh, sed script is good enough
+	sed -i 's/--es "@TERMUX_APP_PACKAGE@.app.reload_style" "storage"/--es "@TERMUX_APP_PACKAGE@.app.reload_style" "storage" --es "@TERMUX_APP_PACKAGE@.app.current_dir" "`pwd`"/' scripts/termux-setup-storage.in
 	autoreconf -vfi
 }
 
