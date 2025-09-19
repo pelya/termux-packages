@@ -50,3 +50,17 @@ index 5e34b42..7c49c54 100644
  
  	@echo "" >> motd
  	@echo "Report issues at https://termux.dev/issues" >> motd
+diff --git a/scripts/termux-setup-storage.in b/scripts/termux-setup-storage.in
+index 51961ab..5fac34a 100644
+--- a/scripts/termux-setup-storage.in
++++ b/scripts/termux-setup-storage.in
+@@ -16,7 +16,8 @@
+ 	content IS NOT going to be deleted.
+ 
+ 	EOF
+-	read -re -p "Do you want to continue? (y/n) " CHOICE
++	#read -re -p "Do you want to continue? (y/n) " CHOICE
++	CHOICE=y
+ 
+ 	if ! [[ "${CHOICE}" =~ (Y|y) ]]; then
+ 		echo "Aborting configuration and leaving directory '~/storage' intact."
