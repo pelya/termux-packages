@@ -50,3 +50,13 @@ index 5e34b42..7c49c54 100644
  
  	@echo "" >> motd
  	@echo "Report issues at https://termux.dev/issues" >> motd
+diff --git a/scripts/termux-setup-storage.in b/scripts/termux-setup-storage.in
+index 51961ab..878d483 100644
+--- a/scripts/termux-setup-storage.in
++++ b/scripts/termux-setup-storage.in
+@@ -29,4 +29,5 @@ case "${TERMUX__USER_ID:-}" in ''|*[!0-9]*|0[0-9]*) TERMUX__USER_ID=0;; esac
+ am broadcast --user "$TERMUX__USER_ID" \
+ 	-a "@TERMUX_APP_PACKAGE@.app.reload_style" \
+ 	--es "@TERMUX_APP_PACKAGE@.app.reload_style" "storage" \
++	--es "@TERMUX_APP_PACKAGE@.app.current_dir" "`pwd`" \
+ 	 "@TERMUX_APP_PACKAGE@" > /dev/null
