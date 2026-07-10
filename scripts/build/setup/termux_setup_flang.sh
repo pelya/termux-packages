@@ -19,13 +19,13 @@ termux_setup_flang() {
 	local __cache_dir="$TERMUX_COMMON_CACHEDIR"/flang-toolchain-cache
 	mkdir -p "$__cache_dir"
 
-	local __version="r28c"
-	local _flang_toolchain_version=0
+	local __version="r29-1"
+	local _flang_toolchain_version=1
 	local __sha256sums="
-bf01399513e3b435224d9a9f656b72a0965a23fdd8c3c26af0f7c32f2a5f3403  package-flang-aarch64.tar.bz2
-3ea2c0e8125ededddf9b3f23c767b8e37816e140ac934c76ace19a168fefdf83  package-flang-host.tar.bz2
-afe7e391355c71e7b0c8ee71a3002e83e2e524ad61810238815facf3030be6e6  package-flang-x86_64.tar.bz2
-169b75f6125dc7b95e1d30416147a05d135da6cbe9cc8432d48f5b8633ac38db  package-install.tar.bz2
+0f681507bb17030fe763fc2e78b5540d6baf29d3efe5acbd5286bd964f70aec6  package-flang-aarch64.tar.bz2
+ecbc4819feebb457a528f77dab628201de03d53628a1d32295d91611d5f4053a  package-flang-host.tar.bz2
+b957bafa43b24b6a68a42ce3aac09f7be7987b8f0c732d7245f4602beb0df5dd  package-flang-x86_64.tar.bz2
+80e5dff0271cfb557d4925c50b459d54c615362df03d4bf29810c0857ae93762  package-install.tar.bz2
 	"
 	local __checksum
 	local __file

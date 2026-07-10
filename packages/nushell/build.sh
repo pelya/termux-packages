@@ -2,14 +2,13 @@ TERMUX_PKG_HOMEPAGE=https://www.nushell.sh
 TERMUX_PKG_DESCRIPTION="A new type of shell operating on structured data"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="0.107.0"
-TERMUX_PKG_REVISION=2
+TERMUX_PKG_VERSION="0.114.0"
 TERMUX_PKG_SRCURL=https://github.com/nushell/nushell/archive/refs/tags/${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256=e5b91463b915c26e72a7be48ddac411e02e25daca1887ec4cf7b98b3b4e6e72e
+TERMUX_PKG_SHA256=7bff1253be3a906c90fb9fce945ed9de282af8fddfe150ec0465bf17305c67e9
 TERMUX_PKG_DEPENDS="openssl"
 TERMUX_PKG_RECOMMENDS="command-not-found, termux-api"
-TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_AUTO_UPDATE=true
 
 termux_step_pre_configure() {
 	termux_setup_rust

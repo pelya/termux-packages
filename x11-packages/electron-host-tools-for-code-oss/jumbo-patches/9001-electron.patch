@@ -70,7 +70,7 @@ Subject: [PATCH] jumbo
  63 files changed, 369 insertions(+), 187 deletions(-)
 
 diff --git a/electron/BUILD.gn b/electron/BUILD.gn
-index b00aa3c3b7..5732390cbb 100644
+index c27602f164..c16d1d5a00 100644
 --- a/electron/BUILD.gn
 +++ b/electron/BUILD.gn
 @@ -1,3 +1,4 @@
@@ -78,7 +78,7 @@ index b00aa3c3b7..5732390cbb 100644
  import("//build/config/locales.gni")
  import("//build/config/ui.gni")
  import("//build/config/win/manifest.gni")
-@@ -419,7 +420,7 @@ action("electron_generate_node_defines") {
+@@ -420,7 +421,7 @@ action("electron_generate_node_defines") {
    args = [ rebase_path(target_gen_dir) ] + rebase_path(inputs)
  }
  
@@ -87,7 +87,7 @@ index b00aa3c3b7..5732390cbb 100644
    configs += [
      "//v8:external_startup_data",
      "//third_party/electron_node:node_external_config",
-@@ -553,6 +554,25 @@ source_set("electron_lib") {
+@@ -558,6 +559,31 @@ source_set("electron_lib") {
    deps += [ "//electron/build/config:generate_mas_config" ]
  
    sources = filenames.lib_sources
@@ -109,11 +109,17 @@ index b00aa3c3b7..5732390cbb 100644
 +
 +    # Conflicts with third_party/blink/renderer/platform:blink_platform
 +    "shell/renderer/electron_smooth_round_rect.cc",
++
++    # `CreateFunctionTemplate` both exists in `electron/shell/common/gin_helper/function_template.h` and `gin/function_template.h`
++    "shell/common/gin_helper/callback.cc",
++
++    # `DeprecatedWrapperInfo::From` also exists in `gin/wrapper_info.cc`
++    "shell/common/gin_helper/wrappable.cc",
 +  ]
    if (is_win) {
      sources += filenames.lib_sources_win
    }
-@@ -567,6 +584,10 @@ source_set("electron_lib") {
+@@ -572,6 +598,10 @@ source_set("electron_lib") {
    }
    if (!is_mac) {
      sources += filenames.lib_sources_views
@@ -124,7 +130,7 @@ index b00aa3c3b7..5732390cbb 100644
    }
  
    if (is_component_build) {
-@@ -660,6 +681,10 @@ source_set("electron_lib") {
+@@ -671,6 +701,10 @@ source_set("electron_lib") {
          "//ui/base/x",
          "//ui/ozone/platform/x11",
        ]
@@ -671,26 +677,17 @@ diff --git a/electron/shell/browser/api/electron_api_safe_storage.cc b/electron/
 index f9ecdd0734..52d640bfa5 100644
 --- a/electron/shell/browser/api/electron_api_safe_storage.cc
 +++ b/electron/shell/browser/api/electron_api_safe_storage.cc
-@@ -12,7 +12,7 @@
- #include "shell/common/gin_helper/dictionary.h"
- #include "shell/common/node_includes.h"
+@@ -345,6 +345,8 @@
  
--namespace {
+ }  // namespace electron::api
+ 
 +namespace a_electron_browser_safe_storage {
- 
- const char* kEncryptionVersionPrefixV10 = "v10";
- const char* kEncryptionVersionPrefixV11 = "v11";
-@@ -125,8 +125,6 @@ std::string DecryptString(v8::Isolate* isolate, v8::Local<v8::Value> buffer) {
-   return plaintext;
- }
- 
--}  // namespace
--
++
  void Initialize(v8::Local<v8::Object> exports,
                  v8::Local<v8::Value> unused,
                  v8::Local<v8::Context> context,
-@@ -142,4 +140,9 @@ void Initialize(v8::Local<v8::Object> exports,
-   dict.SetMethod("setUsePlainTextEncryption", &SetUsePasswordV10);
+@@ -354,4 +356,9 @@
+   dict.Set("safeStorage", electron::api::SafeStorage::Create(isolate));
  }
  
 -NODE_LINKED_BINDING_CONTEXT_AWARE(electron_browser_safe_storage, Initialize)
@@ -729,36 +726,36 @@ diff --git a/electron/shell/browser/api/electron_api_session.cc b/electron/shell
 index 21740d2072..a86b6c7037 100644
 --- a/electron/shell/browser/api/electron_api_session.cc
 +++ b/electron/shell/browser/api/electron_api_session.cc
-@@ -533,8 +533,8 @@ class DictionaryObserver final : public SpellcheckCustomDictionary::Observer {
+@@ -544,8 +544,8 @@
  };
  #endif  // BUILDFLAG(ENABLE_BUILTIN_SPELLCHECKER)
  
 -struct UserDataLink : base::SupportsUserData::Data {
--  explicit UserDataLink(base::WeakPtr<Session> session_in)
+-  explicit UserDataLink(
 +struct UserDataLink3 : base::SupportsUserData::Data {
-+  explicit UserDataLink3(base::WeakPtr<Session> session_in)
-       : session{std::move(session_in)} {}
++  explicit UserDataLink3(
+       cppgc::WeakPersistent<gin::WeakCell<Session>> session_in)
+       : session{session_in} {}
  
-   base::WeakPtr<Session> session;
-@@ -562,7 +562,7 @@ Session::Session(v8::Isolate* isolate, ElectronBrowserContext* browser_context)
+@@ -577,7 +577,7 @@
  
    browser_context->SetUserData(
        kElectronApiSessionKey,
--      std::make_unique<UserDataLink>(weak_factory_.GetWeakPtr()));
-+      std::make_unique<UserDataLink3>(weak_factory_.GetWeakPtr()));
- 
- #if BUILDFLAG(ENABLE_BUILTIN_SPELLCHECKER)
-   if (auto* service =
-@@ -1741,7 +1741,7 @@ bool Session::IsSpellCheckerEnabled() const {
- // static
- Session* Session::FromBrowserContext(content::BrowserContext* context) {
+-      std::make_unique<UserDataLink>(
++      std::make_unique<UserDataLink3>(
+           cppgc::WeakPersistent<gin::WeakCell<Session>>(
+               weak_factory_.GetWeakCell(
+                   isolate->GetCppHeap()->GetAllocationHandle()))));
+@@ -1680,7 +1680,7 @@
+ gin::WeakCell<Session>* Session::FromBrowserContext(
+     content::BrowserContext* context) {
    auto* data =
 -      static_cast<UserDataLink*>(context->GetUserData(kElectronApiSessionKey));
 +      static_cast<UserDataLink3*>(context->GetUserData(kElectronApiSessionKey));
-   return data ? data->session.get() : nullptr;
- }
- 
-@@ -1919,7 +1919,7 @@ void Session::WillBeDestroyed() {
+   if (data && data->session)
+     return data->session.Get();
+   return nullptr;
+@@ -1871,7 +1871,7 @@
  
  }  // namespace electron::api
  
@@ -767,7 +764,7 @@ index 21740d2072..a86b6c7037 100644
  
  using electron::api::Session;
  
-@@ -1963,6 +1963,9 @@ void Initialize(v8::Local<v8::Object> exports,
+@@ -1930,6 +1930,9 @@
    dict.SetMethod("fromPath", &FromPath);
  }
  
@@ -1057,30 +1054,6 @@ index 1603230fbb..78f09da358 100644
      // --remote-debugging-port
      DevToolsManagerDelegate::StartHttpHandler();
    }
-diff --git a/electron/shell/browser/electron_browser_main_parts_linux.cc b/electron/shell/browser/electron_browser_main_parts_linux.cc
-index 85d1ad9ba9..7c9f01f0b8 100644
---- a/electron/shell/browser/electron_browser_main_parts_linux.cc
-+++ b/electron/shell/browser/electron_browser_main_parts_linux.cc
-@@ -114,16 +114,16 @@
- void ElectronBrowserMainParts::DetectOzonePlatform() {
-   auto const env = base::Environment::Create();
-   auto* const command_line = base::CommandLine::ForCurrentProcess();
--  if (!command_line->HasSwitch(switches::kOzonePlatform)) {
-+  if (!command_line->HasSwitch(::switches::kOzonePlatform)) {
-     auto ozone_platform_hint =
--        command_line->GetSwitchValueASCII(switches::kOzonePlatformHint);
-+        command_line->GetSwitchValueASCII(::switches::kOzonePlatformHint);
-     if (ozone_platform_hint.empty()) {
-       ozone_platform_hint =
-           env->GetVar(kElectronOzonePlatformHint).value_or("");
-     }
-     if (!ozone_platform_hint.empty()) {
-       command_line->AppendSwitchASCII(
--          switches::kOzonePlatform, MaybeFixPlatformName(ozone_platform_hint));
-+          ::switches::kOzonePlatform, MaybeFixPlatformName(ozone_platform_hint));
-     }
-   }
- 
 diff --git a/electron/shell/browser/extensions/api/extension_action/extension_action_api.cc b/electron/shell/browser/extensions/api/extension_action/extension_action_api.cc
 index 0b05be8db3..09e5d81ed4 100644
 --- a/electron/shell/browser/extensions/api/extension_action/extension_action_api.cc
@@ -1153,15 +1126,6 @@ index eff6db2b3b..a9b3c90d68 100644
      if (api_contents) {
        api::tabs::Tab tab;
        tab.id = api_contents->ID();
-@@ -58,7 +58,7 @@ std::optional<base::Value::Dict> ElectronMessagingDelegate::MaybeGetTabInfo(
- content::WebContents* ElectronMessagingDelegate::GetWebContentsByTabId(
-     content::BrowserContext* browser_context,
-     int tab_id) {
--  auto* contents = electron::api::WebContents::FromID(tab_id);
-+  auto* contents = ::electron::api::WebContents::FromID(tab_id);
-   if (!contents) {
-     return nullptr;
-   }
 diff --git a/electron/shell/browser/hid/hid_chooser_context.cc b/electron/shell/browser/hid/hid_chooser_context.cc
 index 4869f56eb8..93ce4eaff9 100644
 --- a/electron/shell/browser/hid/hid_chooser_context.cc
@@ -1267,28 +1231,6 @@ index 5f27233e56..1ab263ae5e 100644
  }
  
  void ThemeDataSource::SendColorsCss(
-diff --git a/electron/shell/browser/ui/views/client_frame_view_linux.cc b/electron/shell/browser/ui/views/client_frame_view_linux.cc
-index 98f6f0b785..4c43d25f12 100644
---- a/electron/shell/browser/ui/views/client_frame_view_linux.cc
-+++ b/electron/shell/browser/ui/views/client_frame_view_linux.cc
-@@ -40,7 +40,7 @@ namespace {
- 
- // These values should be the same as Chromium uses.
- constexpr int kResizeBorder = 10;
--constexpr int kResizeInsideBoundsSize = 5;
-+constexpr int kResizeInsideBoundsSize2 = 5;
- 
- ui::NavButtonProvider::ButtonState ButtonStateToNavButtonProviderState(
-     views::Button::ButtonState state) {
-@@ -199,7 +199,7 @@ void ClientFrameViewLinux::OnWindowButtonOrderingChange() {
- int ClientFrameViewLinux::ResizingBorderHitTest(const gfx::Point& point) {
-   return ResizingBorderHitTestImpl(point,
-                                    RestoredMirroredFrameBorderInsets() +
--                                       gfx::Insets(kResizeInsideBoundsSize));
-+                                       gfx::Insets(kResizeInsideBoundsSize2));
- }
- 
- gfx::Rect ClientFrameViewLinux::GetBoundsForClientView() const {
 diff --git a/electron/shell/common/api/crashpad_support.cc b/electron/shell/common/api/crashpad_support.cc
 index 6106304395..966e518c80 100644
 --- a/electron/shell/common/api/crashpad_support.cc
@@ -1739,3 +1681,96 @@ index c1c399f89b..51b5b35f38 100644
    ]
  
    if (is_mac) {
+diff --git a/gin/BUILD.gn b/gin/BUILD.gn
+index ef288ce49b..9acefb179a 100644
+--- a/gin/BUILD.gn
++++ b/gin/BUILD.gn
+@@ -84,6 +84,7 @@ jumbo_component("gin") {
+   ]
+   jumbo_excluded_sources = [
+     "converter.cc", # Fail to compile
++    "wrapper_info.cc", # Conflicts with //electron:electron_lib
+   ]
+ 
+   if (use_partition_alloc) {
+--- a/electron/shell/browser/api/electron_api_service_worker_main.cc
++++ b/electron/shell/browser/api/electron_api_service_worker_main.cc
+@@ -347,7 +347,7 @@
+
+ }  // namespace electron::api
+ 
+-namespace {
++namespace a_electron_api_service_worker_main {
+ 
+ using electron::api::ServiceWorkerMain;
+ 
+@@ -364,4 +364,6 @@
+ }  // namespace
+ 
++#define _module _module_electron_api_service_worker_main
+ NODE_LINKED_BINDING_CONTEXT_AWARE(electron_browser_service_worker_main,
+-                                  Initialize)
++                                  a_electron_api_service_worker_main::Initialize)
++#undef _module
+--- a/electron/shell/browser/api/electron_api_msix_updater.cc
++++ b/electron/shell/browser/api/electron_api_msix_updater.cc
+@@ -41,7 +41,7 @@
+ 
+ }  // namespace electron
+ 
+-namespace {
++namespace a_electron_api_msix_updater {
+ 
+ #if BUILDFLAG(IS_WIN)
+ 
+@@ -906,4 +906,6 @@
+ 
+ }  // namespace
+ 
++#define _module _module_electron_browser_msix_updater
+-NODE_LINKED_BINDING_CONTEXT_AWARE(electron_browser_msix_updater, Initialize)
++NODE_LINKED_BINDING_CONTEXT_AWARE(electron_browser_msix_updater, a_electron_api_msix_updater::Initialize)
++#undef _module
+--- a/electron/shell/browser/extensions/electron_extension_tab_util.cc
++++ b/electron/shell/browser/extensions/electron_extension_tab_util.cc
+@@ -9,10 +9,10 @@
+ 
+ namespace extensions {
+ 
+-electron::api::WebContents* GetElectronTabById(
++::electron::api::WebContents* GetElectronTabById(
+     int tab_id,
+     content::BrowserContext* browser_context) {
+-  auto* contents = electron::api::WebContents::FromID(tab_id);
++  auto* contents = ::electron::api::WebContents::FromID(tab_id);
+   if (!contents || !contents->web_contents())
+     return nullptr;
+   if (contents->web_contents()->GetBrowserContext() != browser_context)
+--- a/electron/shell/browser/extensions/electron_extension_tab_util.h
++++ b/electron/shell/browser/extensions/electron_extension_tab_util.h
+@@ -20,7 +20,7 @@
+ // treated as nonexistent so that an extension loaded into one Session cannot
+ // observe or operate on windows belonging to another Session, matching
+ // Chrome's profile-scoped ExtensionTabUtil::GetTabById semantics.
+-electron::api::WebContents* GetElectronTabById(
++::electron::api::WebContents* GetElectronTabById(
+     int tab_id,
+     content::BrowserContext* browser_context);
+ 
+--- a/electron/shell/browser/ui/views/frameless_view.cc
++++ b/electron/shell/browser/ui/views/frameless_view.cc
+@@ -12,6 +12,8 @@
+ #include "ui/views/widget/widget.h"
+ #include "ui/views/widget/widget_delegate.h"
+ 
++#define kResizeInsideBoundsSize kResizeInsideBoundsSize_frameless_view
++
+ namespace electron {
+ 
+ namespace {
+@@ -133,3 +135,5 @@
+ END_METADATA
+ 
+ }  // namespace electron
++
++#undef kResizeInsideBoundsSize

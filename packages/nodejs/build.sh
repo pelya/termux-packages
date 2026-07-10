@@ -2,15 +2,16 @@ TERMUX_PKG_HOMEPAGE=https://nodejs.org/
 TERMUX_PKG_DESCRIPTION="Open Source, cross-platform JavaScript runtime environment"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="Yaksh Bariya <thunder-coding@termux.dev>"
-TERMUX_PKG_VERSION=24.7.0
+TERMUX_PKG_VERSION=26.3.1
 TERMUX_PKG_SRCURL=https://nodejs.org/dist/v${TERMUX_PKG_VERSION}/node-v${TERMUX_PKG_VERSION}.tar.xz
-TERMUX_PKG_SHA256=cf74a77753b629ffebd2e38fb153a21001b2b7a3c365c0ec7332b120b98c7251
+TERMUX_PKG_SHA256=979b9b8308a8d2d4a27c662ed50448c85f970c0fd4f5ce8b98e8da78c441f2bc
 # thunder-coding: don't try to autoupdate nodejs, that thing takes 2 whole hours to build for a single arch, and requires a lot of patch updates everytime. Also I run tests everytime I update it to ensure least bugs
 TERMUX_PKG_AUTO_UPDATE=false
 # Note that we do not use a shared libuv to avoid an issue with the Android
 # linker, which does not use symbols of linked shared libraries when resolving
 # symbols on dlopen(). See https://github.com/termux/termux-packages/issues/462.
-TERMUX_PKG_DEPENDS="libc++, openssl, c-ares, libicu, libsqlite, zlib"
+TERMUX_PKG_DEPENDS="libc++, openssl, c-ares, libicu, libsqlite, zlib, libffi"
+TERMUX_PKG_RECOMMENDS="npm"
 TERMUX_PKG_CONFLICTS="nodejs-lts, nodejs-current"
 TERMUX_PKG_BREAKS="nodejs-dev"
 TERMUX_PKG_REPLACES="nodejs-current, nodejs-dev"
@@ -28,13 +29,13 @@ termux_step_host_build() {
 	######
 	# Do host-build of ICU, which is required for nodejs
 	######
-	local ICU_VERSION=76.1
-	local ICU_TAR=icu4c-${ICU_VERSION//./_}-src.tgz
-	local ICU_DOWNLOAD=https://github.com/unicode-org/icu/releases/download/release-${ICU_VERSION//./-}/$ICU_TAR
+	local ICU_VERSION=78.3
+	local ICU_TAR=icu4c-${ICU_VERSION}-sources.tgz
+	local ICU_DOWNLOAD=https://github.com/unicode-org/icu/releases/download/release-${ICU_VERSION}/$ICU_TAR
 	termux_download \
 		$ICU_DOWNLOAD\
 		$TERMUX_PKG_CACHEDIR/$ICU_TAR \
-		dfacb46bfe4747410472ce3e1144bf28a102feeaa4e3875bac9b4c6cf30f4f3e
+		3a2e7a47604ba702f345878308e6fefeca612ee895cf4a5f222e7955fabfe0c0
 	tar xf $TERMUX_PKG_CACHEDIR/$ICU_TAR
 	cd icu/source
 	export CC="$TERMUX_HOST_LLVM_BASE_DIR/bin/clang"
@@ -71,14 +72,14 @@ termux_step_host_build() {
 	#  'bucket': 'chromium-browser-clang',
 	#  'objects': [
 	#    {
-	#      'object_name': 'Linux_x64/clang-llvmorg-21-init-5118-g52cd27e6-5.tar.xz',
-	#      'sha256sum': '790fcc5b04e96882e8227ba7994161ab945c0e096057fc165a0f71e32a7cb061',
-	#      'size_bytes': 54517328,
-	#      'generation': 1742541959624765,
+	#      'object_name': 'Linux_x64/clang-llvmorg-23-init-484-gf646b915-1.tar.xz',
+	#      'sha256sum': '1c3c056427ab0db261c54c8fdf7c8404ff55e3de3e550520bcb1e1660ca05aad',
+	#      'size_bytes': 57489092,
+	#      'generation': 1768590901063677,
 	#      'condition': 'host_os == "linux"',
 	#    },
 	#
-	# then the LLVM_COMMIT is 52cd27e6. The g before the hash is not part of the
+	# then the LLVM_COMMIT is f646b915. The g before the hash is not part of the
 	# hash, weird that they decided to include a 'g' for no reason, but 'g' isn't
 	# a part of the hexadecimal characters so anyways.. Also v8 project only
 	# stores the short-hash in the DEPS file, but we are using full hash here for
@@ -87,8 +88,8 @@ termux_step_host_build() {
 	# llvm-project directory.
 	#
 	# Also the sha256sum is the hash of the tarball, which we can directly use
-	local LLVM_TAR="clang-llvmorg-21-init-5118-g52cd27e6-5.tar.xz"
-	local LLVM_TAR_HASH=790fcc5b04e96882e8227ba7994161ab945c0e096057fc165a0f71e32a7cb061
+	local LLVM_TAR="clang-llvmorg-23-init-484-gf646b915-1.tar.xz"
+	local LLVM_TAR_HASH=1c3c056427ab0db261c54c8fdf7c8404ff55e3de3e550520bcb1e1660ca05aad
 	cd $TERMUX_PKG_HOSTBUILD_DIR
 	mkdir llvm-project-build
 	termux_download \
@@ -100,6 +101,9 @@ termux_step_host_build() {
 
 termux_step_pre_configure() {
 	termux_setup_ninja
+	# Temporal API needs rust and cargo to build
+	# Although it is not supported when using shared ICU, so there is no point of setting up rust when we aren't even going to use it
+	# termux_setup_rust
 }
 
 termux_step_configure() {
@@ -116,6 +120,19 @@ termux_step_configure() {
 		termux_error_exit "Unsupported arch '$TERMUX_ARCH'"
 	fi
 
+	# Do not enable by default as it has severe performance degradations.
+	# Causes upto 10x performance degradations
+	#
+	# V8 uses a lot of inlining for optimization results.
+	# Although those optimizations are very much desired, during debugging it can
+	# cause problems as it prevents debuggers from hooking in properly at all code
+	# paths
+	#
+	# if [ "${TERMUX_DEBUG_BUILD}" = "true" ]; then
+	# 	CFLAGS+=" -fno-inline"
+	# 	CXXFLAGS+=" -fno-inline"
+	# fi
+
 	export GYP_DEFINES="host_os=linux"
 	if [ "$TERMUX_ARCH_BITS" = "64" ]; then
 		export CC_host="$TERMUX_PKG_HOSTBUILD_DIR/llvm-project-build/bin/clang"
@@ -125,21 +142,40 @@ termux_step_configure() {
 		export CC_host="$TERMUX_PKG_HOSTBUILD_DIR/llvm-project-build/bin/clang -m32"
 		export CXX_host="$TERMUX_PKG_HOSTBUILD_DIR/llvm-project-build/bin/clang++ -m32"
 		export LINK_host="$TERMUX_PKG_HOSTBUILD_DIR/llvm-project-build/bin/clang++ -m32"
+
+		# We need libffi on host for host builds of node
+		# We have libffi installed on host for 64-bit but not 32-bit, so install it
+		ARCHITECTURE=i386 \
+			termux_download_ubuntu_packages "libffi8"
+		export LDFLAGS_host="-L$TERMUX_PKG_HOSTBUILD_DIR/ubuntu_packages/usr/lib/i386-linux-gnu/ -Wl,-rpath=$TERMUX_PKG_HOSTBUILD_DIR/ubuntu_packages/usr/lib/i386-linux-gnu/"
+		ln -sf $TERMUX_PKG_HOSTBUILD_DIR/ubuntu_packages/usr/lib/i386-linux-gnu/libffi.so{.8,}
 	fi
-	LDFLAGS+=" -ldl"
+	# Although without any configuration at all GYP builds both out/Release/ and out/Debug/
+	# with build.ninja, it is incorrect to use the other directory as configure.py passes
+	# a build_type variable to GYP which it uses to detect release/debug builds which is
+	# used in some places to do some debug build specific stuff.
+	# An example of such errors is the builds failing due to undefined symbols of some
+	# generated source files that happen only in debug builds
+	local _DEBUG=()
+	if [ "${TERMUX_DEBUG_BUILD}" = "true" ]; then
+		_DEBUG+=("--debug")
+	fi
 	# See note above TERMUX_PKG_DEPENDS why we do not use a shared libuv.
 	# When building with ninja, build.ninja is generated for both Debug and Release builds.
 	./configure \
 		--prefix=$TERMUX_PREFIX \
 		--dest-cpu=$DEST_CPU \
 		--dest-os=android \
+		--without-npm \
 		--shared-cares \
+		--shared-ffi \
 		--shared-openssl \
 		--shared-sqlite \
 		--shared-zlib \
 		--with-intl=system-icu \
 		--cross-compiling \
-		--ninja
+		--ninja \
+		"${_DEBUG[@]}"
 
 	export LD_LIBRARY_PATH=$TERMUX_PKG_HOSTBUILD_DIR/icu-installed/lib
 	sed -i \
@@ -175,8 +211,13 @@ termux_step_make_install() {
 }
 
 termux_step_create_debscripts() {
-	cat <<- EOF > ./postinst
+	cat <<- EOF > ./preinst
 	#!$TERMUX_PREFIX/bin/sh
-	npm config set foreground-scripts true
+	if [ "\$#" = "3" ] && dpkg --compare-versions "\$2" le "25.3.0"; then
+		echo "Starting with nodejs v25.3.0-1, npm is no longer bundled with nodejs package."
+		echo "You might want to install npm package separately if you need it."
+		echo "You can install it by running: pkg install npm"
+		echo "It should not be needed unless you are using --no-install-recommends with apt."
+	fi
 	EOF
 }

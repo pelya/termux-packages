@@ -14,79 +14,69 @@ external/iputils/NOTICE
 "
 TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION="9.0.0-r76"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_REVISION=4
+TERMUX_PKG_SRCURL=https://android.googlesource.com/platform/manifest
+TERMUX_PKG_SHA256=SKIP_CHECKSUM
 TERMUX_PKG_AUTO_UPDATE=false
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_HOSTBUILD=true
 TERMUX_PKG_SKIP_SRC_EXTRACT=true
-# Should be handled by AOSP build system so I am disable it here.
+# Should be handled by AOSP build system, so it should be disabled here.
 TERMUX_PKG_UNDEF_SYMBOLS_FILES="all"
+TERMUX_PKG_DEPENDS="resolv-conf"
 TERMUX_PKG_BREAKS="bionic-host"
 TERMUX_PKG_REPLACES="bionic-host"
-
-# Function to obtain the .deb URL
-obtain_deb_url() {
-	# jammy is last known Ubuntu distro which contains `libncurses.so.5` in packages
-	local url="https://packages.ubuntu.com/jammy/amd64/$1/download"
-	local attempt retries=5 wait=5
-	local PAGE deb_url
-
-	for ((attempt=1; attempt<=retries; attempt++)); do
-		PAGE="$(curl -s "$url")"
-		>&2 echo page
-		>&2 echo "$PAGE"
-		deb_url="$(grep -oE 'https?://.*\.deb' <<< "$PAGE" | head -n1)"
-		if [[ -n "$deb_url" ]]; then
-				echo "$deb_url"
-				return 0
-		else
-			>&2 echo "Attempt $attempt: Failed to obtain URL. Retrying in $wait seconds..."
-		fi
-		sleep "$wait"
-	done
-
-	termux_error_exit "Failed to obtain URL after $retries attempts."
-}
+# For safety to protect termux-docker users out of an abundance of caution,
+# because a failed or bugged build of this package may corrupt termux-docker more severely
+# than it may corrupt a standard Android ROM.
+TERMUX_PKG_ON_DEVICE_BUILD_NOT_SUPPORTED=true
 
 termux_step_get_source() {
-	if $TERMUX_ON_DEVICE_BUILD; then
-		termux_error_exit "Package '$TERMUX_PKG_NAME' is not safe for on-device builds."
+	local TMP_CHECKOUT="$TERMUX_PKG_CACHEDIR/tmp-checkout"
+	local TMP_CHECKOUT_VERSION="$TERMUX_PKG_CACHEDIR/tmp-checkout-version"
+
+	if [[ ! -f "$TMP_CHECKOUT_VERSION" || "$(cat $TMP_CHECKOUT_VERSION)" != "$TERMUX_PKG_VERSION" ]]; then
+		echo "Downloading AOSP source from '$TERMUX_PKG_SRCURL'"
+
+		rm -rf "$TMP_CHECKOUT"
+
+		export LD_LIBRARY_PATH="${TMP_CHECKOUT}/prefix/lib/x86_64-linux-gnu:${TMP_CHECKOUT}/prefix/usr/lib/x86_64-linux-gnu"
+		export PATH="${TMP_CHECKOUT}/prefix/usr/bin:${PATH//$HOME\/.cargo\/bin/}"
+
+		local -a ubuntu_packages=(
+			# For libtinfo.so.5
+			"libtinfo5"
+			# for libncurses.so.5
+			"libncurses5"
+		)
+
+		DESTINATION="${TMP_CHECKOUT}/prefix" \
+		UBUNTU_RELEASE="jammy" \
+		termux_download_ubuntu_packages "${ubuntu_packages[@]}"
+
+		termux_download https://storage.googleapis.com/git-repo-downloads/repo "${TERMUX_PKG_CACHEDIR}/repo" SKIP_CHECKSUM
+		chmod +x "${TERMUX_PKG_CACHEDIR}/repo"
+
+		pushd "$TMP_CHECKOUT"
+
+		# Repo requires us to have a Git user name and email set.
+		# The GitHub workflow does this, but the local build container doesn't
+		[[ "$(git config --get user.name)" != '' ]] || git config --global user.name "Termux Github Actions"
+		[[ "$(git config --get user.email)" != '' ]] || git config --global user.email "contact@termux.dev"
+		"${TERMUX_PKG_CACHEDIR}"/repo init \
+			-u "${TERMUX_PKG_SRCURL}" \
+			-b main -m "${TERMUX_PKG_BUILDER_DIR}/default.xml" <<< 'n'
+		"${TERMUX_PKG_CACHEDIR}"/repo sync -c -j32
+
+		popd
+
+		echo "$TERMUX_PKG_VERSION" > "$TMP_CHECKOUT_VERSION"
+	else
+		echo "Skipped downloading of AOSP source from '$TERMUX_PKG_SRCURL'"
 	fi
 
-	case "${TERMUX_ARCH}" in
-		i686) _ARCH=x86 ;;
-		aarch64) _ARCH=arm64 ;;
-		*) _ARCH=${TERMUX_ARCH} ;;
-	esac
-
-	export LD_LIBRARY_PATH="${TERMUX_PKG_SRCDIR}/prefix/lib/x86_64-linux-gnu:${TERMUX_PKG_SRCDIR}/prefix/usr/lib/x86_64-linux-gnu"
-	export PATH="${TERMUX_PKG_SRCDIR}/prefix/usr/bin:${PATH//$HOME\/.cargo\/bin/}"
-
-	mkdir -p "${TERMUX_PKG_SRCDIR}/prefix"
-	cd "${TERMUX_PKG_SRCDIR}" || termux_error_exit "Couldn't enter source code directory: ${TERMUX_PKG_SRCDIR}"
-
-	local URL DEB_NAME
-	for i in libtinfo5 libncurses5 openssh-client; do
-		URL="$(obtain_deb_url "$i")"
-		DEB_NAME="${URL##*/}"
-		termux_download "$URL" "${TERMUX_PKG_CACHEDIR}/${DEB_NAME}" SKIP_CHECKSUM
-
-		mkdir -p "${TERMUX_PKG_TMPDIR}/${DEB_NAME}"
-		ar x "${TERMUX_PKG_CACHEDIR}/${DEB_NAME}" --output="${TERMUX_PKG_TMPDIR}/${DEB_NAME}"
-		tar xf "${TERMUX_PKG_TMPDIR}/${DEB_NAME}/data.tar.zst" -C "${TERMUX_PKG_SRCDIR}/prefix"
-	done
-
-	termux_download https://storage.googleapis.com/git-repo-downloads/repo "${TERMUX_PKG_CACHEDIR}/repo" SKIP_CHECKSUM
-	chmod +x "${TERMUX_PKG_CACHEDIR}/repo"
-
-	# Repo requires us to have a Git user name and email set.
-	# The GitHub workflow does this, but the local build container doesn't
-	[[ "$(git config --get user.name)" != '' ]] || git config --global user.name "Termux Github Actions"
-	[[ "$(git config --get user.email)" != '' ]] || git config --global user.email "contact@termux.dev"
-	"${TERMUX_PKG_CACHEDIR}"/repo init \
-		-u https://android.googlesource.com/platform/manifest \
-		-b main -m "${TERMUX_PKG_BUILDER_DIR}/default.xml" <<< 'n'
-	"${TERMUX_PKG_CACHEDIR}"/repo sync -c -j32
+	rm -rf "$TERMUX_PKG_SRCDIR"
+	cp -Rf "$TMP_CHECKOUT" "$TERMUX_PKG_SRCDIR"
 }
 
 termux_step_host_build() {
@@ -104,8 +94,10 @@ termux_step_host_build() {
 		b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43
 	tar xf "${TERMUX_PKG_CACHEDIR}/python2.tar.xz" --strip-components=1 -C "${PYTHON2_WORKDIR}"
 	pushd "${PYTHON2_WORKDIR}"
+	export CC="clang-${TERMUX_HOST_LLVM_MAJOR_VERSION}"
+	export CXX="clang-${TERMUX_HOST_LLVM_MAJOR_VERSION}"
 	./configure --prefix="${PYTHON2_INSTALLDIR}"
-	make install
+	make install -j"$TERMUX_PKG_MAKE_PROCESSES"
 	popd
 	export PATH="${PYTHON2_INSTALLDIR}/bin:${PATH}"
 	python2 -m ensurepip
@@ -113,8 +105,18 @@ termux_step_host_build() {
 }
 
 termux_step_configure() {
+	case "${TERMUX_ARCH}" in
+		i686)    _AOSP_ARCH=x86    ;;
+		x86_64)  _AOSP_ARCH=x86_64 ;;
+		arm)     _AOSP_ARCH=arm    ;;
+		aarch64) _AOSP_ARCH=arm64  ;;
+		*) termux_error_exit "Unsupported arch: $TERMUX_ARCH"
+	esac
+
 	# for adding python 2 to $PATH on subsequent builds when termux_step_host_build() has already run
 	export PATH="${TERMUX_PKG_HOSTBUILD_DIR}/python2/bin:${PATH}"
+
+	export LD_LIBRARY_PATH="${TERMUX_PKG_SRCDIR}/prefix/lib/x86_64-linux-gnu:${TERMUX_PKG_SRCDIR}/prefix/usr/lib/x86_64-linux-gnu"
 }
 
 termux_step_make() {
@@ -122,10 +124,10 @@ termux_step_make() {
 		set -e;
 		cd ${TERMUX_PKG_SRCDIR}
 		source build/envsetup.sh;
-		lunch aosp_${_ARCH}-eng;
+		lunch aosp_${_AOSP_ARCH}-eng;
 		export ALLOW_MISSING_DEPENDENCIES=true
 		make linker libc libm libdl libicuuc debuggerd crash_dump
-		make toybox sh mkshrc ping ping6 tracepath tracepath6 traceroute6 arping
+		make toybox grep sh mkshrc ping ping6 tracepath tracepath6 traceroute6 arping
 	"
 }
 

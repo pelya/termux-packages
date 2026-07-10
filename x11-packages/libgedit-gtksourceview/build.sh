@@ -2,12 +2,12 @@ TERMUX_PKG_HOMEPAGE=https://gitlab.gnome.org/World/gedit/libgedit-gtksourceview
 TERMUX_PKG_DESCRIPTION="A source code editing widget"
 TERMUX_PKG_LICENSE="LGPL-2.1"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="299.5.0"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_VERSION="299.7.1"
 TERMUX_PKG_SRCURL=https://gitlab.gnome.org/World/gedit/libgedit-gtksourceview/-/archive/${TERMUX_PKG_VERSION}/libgedit-gtksourceview-${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256=49b66fe7e2d33dbf643107ae16fe324edf91bb21e86a927b2c5981f63f4cbb12
+TERMUX_PKG_SHA256=9f3e53fc7411b868457f6ddf3dfd107505e66123b4b919a463ce979f96ad8294
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_DEPENDS="gdk-pixbuf, glib, gtk3, libcairo, libxml2, pango"
+TERMUX_PKG_UPDATE_TAG_TYPE=newest-tag
+TERMUX_PKG_DEPENDS="gdk-pixbuf, glib, gtk3, libcairo, libgedit-amtk, libgedit-gfls, libxml2, pango"
 TERMUX_PKG_BUILD_DEPENDS="g-ir-scanner, glib-cross"
 TERMUX_PKG_VERSIONED_GIR=false
 TERMUX_PKG_DISABLE_GIR=false
@@ -27,8 +27,8 @@ termux_step_pre_configure() {
 termux_step_post_massage() {
 	# Do not forget to bump revision of reverse dependencies and rebuild them
 	# after SOVERSION is changed.
-	local _GUARD_FILE="lib/libgedit-gtksourceview-300.so.3"
+	local _GUARD_FILE="lib/libgedit-gtksourceview-300.so.5"
 	if [ ! -e "${_GUARD_FILE}" ]; then
-		termux_error_exit "Error: file ${_GUARD_FILE} not found."
+		termux_error_exit "file ${_GUARD_FILE} not found."
 	fi
 }

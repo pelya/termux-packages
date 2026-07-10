@@ -1,10 +1,9 @@
 TERMUX_PKG_HOMEPAGE=https://github.com/grame-cncm/faust
 TERMUX_PKG_DESCRIPTION="A functional programming language for signal processing and sound synthesis"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="2.81.2"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_VERSION="2.85.9"
 TERMUX_PKG_SRCURL=https://github.com/grame-cncm/faust/releases/download/${TERMUX_PKG_VERSION}/faust-${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256=c91afe17cc01f1f75e4928dc2d2971dd83b37d10be991dda7e8b94ffab1f1ac9
+TERMUX_PKG_SHA256=0cd00968f81357b78df64c25aad12ec94bd4b75bd489ca0449fe7f7b1ad0efe1
 TERMUX_PKG_AUTO_UPDATE=true
 # Faust is licensed under LGPL 2.1
 # The faustlibraries are licensed under the: STK 4.3.0 License

@@ -2,11 +2,11 @@ TERMUX_PKG_HOMEPAGE=https://www.radare.org/
 TERMUX_PKG_DESCRIPTION="UNIX-like reverse engineering framework and command-line toolset"
 TERMUX_PKG_LICENSE="GPL-3.0"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="6.0.2"
+TERMUX_PKG_VERSION="6.1.8"
 TERMUX_PKG_SRCURL=https://github.com/radareorg/radare2/archive/refs/tags/${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256=5879969ca502fff91ec255cd016e0b0840476f5edd490c75a64c0a1ffc8a7dca
+TERMUX_PKG_SHA256=84d0e32af697f720c9f480f6b3e56b08f64251d90cfe2d8f163431c006c0053e
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_DEPENDS="libuv"
+TERMUX_PKG_DEPENDS="libandroid-spawn, libuv"
 TERMUX_PKG_BREAKS="radare2-dev"
 TERMUX_PKG_REPLACES="radare2-dev"
 TERMUX_PKG_BUILD_IN_SRC=true
@@ -31,4 +31,6 @@ termux_step_pre_configure() {
 
 	# Remove old libs which may mess with new build:
 	rm -f $TERMUX_PREFIX/lib/libr_*
+
+	LDFLAGS+=" -landroid-spawn"
 }

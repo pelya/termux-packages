@@ -2,14 +2,14 @@ TERMUX_PKG_HOMEPAGE=https://github.com/kpet/clvk
 TERMUX_PKG_DESCRIPTION="Experimental implementation of OpenCL on Vulkan"
 TERMUX_PKG_LICENSE="Apache-2.0"
 TERMUX_PKG_MAINTAINER="@termux"
-_COMMIT=81d3547a022b543e97b4a7c5a165e1519fae1944
-_COMMIT_DATE=20250910
-_COMMIT_TIME=081800
-TERMUX_PKG_VERSION="0.0.20250910.081800"
+_COMMIT=4cae251da595d703505ae8d704e9f9fea3788cf6
+_COMMIT_DATE=20260628
+_COMMIT_TIME=094435
+TERMUX_PKG_VERSION="0.0.20260628.094435"
 TERMUX_PKG_SRCURL=git+https://github.com/kpet/clvk
 TERMUX_PKG_GIT_BRANCH=main
-TERMUX_PKG_BUILD_DEPENDS="vulkan-headers, vulkan-loader-android"
 TERMUX_PKG_DEPENDS="libc++, vulkan-loader"
+TERMUX_PKG_BUILD_DEPENDS="vulkan-headers, vulkan-loader-android"
 TERMUX_PKG_ANTI_BUILD_DEPENDS="vulkan-loader"
 TERMUX_PKG_RECOMMENDS="ocl-icd"
 TERMUX_PKG_HOSTBUILD=true
@@ -23,6 +23,7 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -DLLVM_INCLUDE_EXAMPLES=OFF
 -DLLVM_NATIVE_TOOL_DIR=${TERMUX_PKG_HOSTBUILD_DIR}/llvm/bin
 -DVulkan_INCLUDE_DIRS=${TERMUX_PREFIX}/include
+-DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
 "
 
 termux_pkg_auto_update() {
@@ -39,7 +40,7 @@ termux_pkg_auto_update() {
 
 	local latest_commit_date_tz=$(curl -s "${api_url}/${latest_commit}" | jq .commit.committer.date | sed -e 's|\"||g')
 	if [[ -z "${latest_commit_date_tz}" ]]; then
-		termux_error_exit "ERROR: Unable to get latest commit date info"
+		termux_error_exit "Unable to get latest commit date info"
 	fi
 
 	local latest_commit_date=$(echo "${latest_commit_date_tz}" | sed -e 's|\(.*\)T\(.*\)Z|\1|' -e 's|\-||g')
@@ -76,6 +77,11 @@ termux_pkg_auto_update() {
 		ERROR: Upstream is older than current package version!
 		ERROR: Please report to upstream!
 		"
+	fi
+
+	if [[ "${BUILD_PACKAGES}" == "false" ]]; then
+		echo "INFO: package needs to be updated to ${latest_version}."
+		return
 	fi
 
 	sed \
@@ -131,7 +137,20 @@ termux_step_host_build() {
 		-DLLVM_DIR="$_host_clang_base/cmake" \
 		-DCMAKE_C_COMPILER="$_host_clang_base/bin/clang" \
 		-DCMAKE_CXX_COMPILER="$_host_clang_base/bin/clang++" \
-		-DLIBCLC_TARGETS_TO_BUILD="clspv--;clspv64--"
+		-DRUNTIMES_clspv--_LLVM_ENABLE_RUNTIMES=libclc \
+		-DLLVM_DEFAULT_TARGET_TRIPLE="clspv--"
+	ninja \
+		-C "${TERMUX_PKG_HOSTBUILD_DIR}/libclc" \
+		-j "${TERMUX_PKG_MAKE_PROCESSES}"
+	cmake \
+		-G Ninja \
+		-B "${TERMUX_PKG_HOSTBUILD_DIR}/libclc" \
+		-S "${TERMUX_PKG_SRCDIR}/external/clspv/third_party/llvm/libclc" \
+		-DLLVM_DIR="$_host_clang_base/cmake" \
+		-DCMAKE_C_COMPILER="$_host_clang_base/bin/clang" \
+		-DCMAKE_CXX_COMPILER="$_host_clang_base/bin/clang++" \
+		-DRUNTIMES_clspv64--_LLVM_ENABLE_RUNTIMES=libclc \
+		-DLLVM_DEFAULT_TARGET_TRIPLE="clspv64--"
 	ninja \
 		-C "${TERMUX_PKG_HOSTBUILD_DIR}/libclc" \
 		-j "${TERMUX_PKG_MAKE_PROCESSES}"

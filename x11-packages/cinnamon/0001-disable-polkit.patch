@@ -14,17 +14,16 @@ index b487c16..c64dab0 100644
  const KeyringPrompt = imports.ui.keyringPrompt;
  const RunDialog = imports.ui.runDialog;
  const Layout = imports.ui.layout;
-@@ -438,12 +441,16 @@ function start() {
+@@ -450,11 +450,15 @@ function start() {
      }
  
      // Polkit Agent
 -    if (global.settings.get_boolean("enable-polkit-agent")) {
 +    if (Config.HAVE_POLKIT && global.settings.get_boolean("enable-polkit-agent")) {
          PolkitAuthenticationAgent.init();
-         global.log('Polkit agent: enabled')
      }
      else {
--        global.log('Polkit agent: disabled')
+-        global.log('Polkit agent: disabled by settings')
 +        if (Config.HAVE_POLKIT) {
 +            global.log('Polkit agent: disabled (user setting)')
 +        } else {
@@ -37,10 +36,10 @@ diff --git a/meson.build b/meson.build
 index 1bdeaec..111d639 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -31,7 +31,11 @@ dbus = dependency('dbus-1')
- gcr = dependency('gcr-base-3', version:'>=3.7.5')
+@@ -31,7 +31,11 @@ cogl = dependency('muffin-cogl-0')
+ cogl_path = dependency('muffin-cogl-path-0')
+ gcr = dependency('gcr-base-3', version: '>= 3.7.5')
  gdkx11 = dependency('gdk-x11-3.0')
- gi = dependency('gobject-introspection-1.0', version: '>= 0.9.2')
 -polkit = dependency('polkit-agent-1', version: '>= 0.100')
 +if get_option('polkit')
 +    polkit = dependency('polkit-agent-1', version: '>= 0.100')
@@ -50,14 +49,14 @@ index 1bdeaec..111d639 100644
  atk = dependency('atk-bridge-2.0')
  gio = dependency('gio-2.0', version: '>= 2.36.0')
  gio_unix = dependency('gio-unix-2.0')
-@@ -73,6 +77,7 @@ cinnamon_conf = configuration_data()
+@@ -93,6 +97,7 @@ cinnamon_conf = configuration_data()
  cinnamon_conf.set_quoted('VERSION', version)
  cinnamon_conf.set_quoted('GETTEXT_PACKAGE', meson.project_name().to_lower())
- cinnamon_conf.set('HAVE_NETWORKMANAGER', have_networkmanager)
+ cinnamon_conf.set('BUILT_NM_AGENT', internal_nm_agent)
 +cinnamon_conf.set10('HAVE_POLKIT', get_option('polkit'))
+ cinnamon_conf.set10('USE_GIR20', use_gir20)
  
  have_mallinfo = cc.has_function('mallinfo', prefix: '#include <malloc.h>')
- if have_mallinfo
 @@ -105,10 +110,14 @@ config_h = declare_dependency(
  # includes
  include_root = include_directories('.')
@@ -134,7 +133,7 @@ index 75a9447..4e0e445 100644
  libcinnamon_deps += nm_deps
  
  if have_networkmanager
-@@ -206,10 +214,13 @@ cinnamon_gir_includes = [
+@@ -214,10 +214,13 @@ cinnamon_gir_includes = [
      'Meta-0',
      'CMenu-3.0',
      'Gcr-3',
@@ -146,6 +145,6 @@ index 75a9447..4e0e445 100644
 +    cinnamon_gir_includes += ['PolkitAgent-1.0']
 +endif
 +
- if have_networkmanager
+ if internal_nm_agent
      cinnamon_gir_includes += ['NM-1.0']
  endif

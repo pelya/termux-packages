@@ -2,17 +2,50 @@ TERMUX_PKG_HOMEPAGE=https://yazi-rs.github.io/
 TERMUX_PKG_DESCRIPTION="Blazing fast terminal file manager written in Rust, based on async I/O"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="25.5.31"
-TERMUX_PKG_REVISION=2
+TERMUX_PKG_VERSION="26.5.6"
 TERMUX_PKG_SRCURL=https://github.com/sxyazi/yazi/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256=4d005e7c3f32b5574d51ab105597f3da3a4be2f7b5cd1bcb284143ad38253ed4
+TERMUX_PKG_SHA256=a18445df86a20068f7b17609d12d6f635de488958579ae7a2b143a244ba7e63f
 TERMUX_PKG_BUILD_DEPENDS='aosp-libs, imagemagick'
-TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_RECOMMENDS='7zip, chafa, fd, ffmpeg, fzf, imagemagick, jq, poppler, ripgrep, zoxide'
 TERMUX_PKG_BUILD_IN_SRC=true
+TERMUX_PKG_AUTO_UPDATE=true
 
 termux_step_pre_configure() {
 	termux_setup_rust
-	[[ "$TERMUX_ON_DEVICE_BUILD" == "false" ]] && termux_setup_proot
+	if [[ "$TERMUX_ON_DEVICE_BUILD" == "false" ]]; then
+		termux_setup_proot
+	fi
+
+	cargo vendor
+	find ./vendor \
+		-mindepth 1 -maxdepth 1 -type d \
+		! -wholename ./vendor/trash \
+		! -wholename ./vendor/cc \
+		-exec rm -rf '{}' \;
+
+	find vendor/trash -type f -print0 | \
+		xargs -0 sed -i \
+		-e 's|"android"|"disabling_this_because_it_is_for_building_an_apk"|g' \
+		-e "s|/tmp|$TERMUX_PREFIX/tmp|g"
+
+	# patch trash-rs
+	local patch="$TERMUX_PKG_BUILDER_DIR/trash-rs-implement-get_mount_points-android.diff"
+	local dir="vendor/trash"
+	echo "Applying patch: $patch"
+	patch -p1 -d "$dir" < "$patch"
+
+	# patch rust-cc
+	local patch="$TERMUX_PKG_BUILDER_DIR/rust-cc-do-not-concatenate-all-the-CFLAGS.diff"
+	local dir="vendor/cc"
+	echo "Applying patch: $patch"
+	patch -p1 -d "$dir" < "$patch"
+
+	cat >> Cargo.toml <<-EOF
+
+		[patch.crates-io]
+		trash = { path = "./vendor/trash" }
+		cc = { path = "./vendor/cc" }
+	EOF
 }
 
 termux_step_make() {
@@ -37,10 +70,14 @@ termux_step_make_install() {
 
 	# application icons
 	local res
+	local termux_proot_run=''
+	if [[ "$TERMUX_ON_DEVICE_BUILD" == "false" ]]; then
+		termux_proot_run=termux-proot-run
+	fi
 	echo -n "Generating icons:"
 	for res in 16 24 32 48 64 128 256; do
 		mkdir -p "${TERMUX_PREFIX}/share/icons/hicolor/${res}x${res}/apps"
-		termux-proot-run magick assets/logo.png \
+		$termux_proot_run magick assets/logo.png \
 			-resize "${res}x${res}" \
 			"${TERMUX_PREFIX}/share/icons/hicolor/${res}x${res}/apps/yazi.png"
 		[[ -e "${TERMUX_PREFIX}/share/icons/hicolor/${res}x${res}/apps/yazi.png" ]] && {

@@ -1,11 +1,10 @@
-TERMUX_PKG_HOMEPAGE=https://oneapi-src.github.io/oneTBB/
+TERMUX_PKG_HOMEPAGE=https://uxlfoundation.github.io/oneTBB/
 TERMUX_PKG_DESCRIPTION="oneAPI Threading Building Blocks"
 TERMUX_PKG_LICENSE="Apache-2.0"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="2022.2.0"
-TERMUX_PKG_REVISION=2
-TERMUX_PKG_SRCURL=https://github.com/oneapi-src/oneTBB/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256=f0f78001c8c8edb4bddc3d4c5ee7428d56ae313254158ad1eec49eced57f6a5b
+TERMUX_PKG_VERSION="2023.0.0"
+TERMUX_PKG_SRCURL=https://github.com/uxlfoundation/oneTBB/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_SHA256=f8767b971ec6aea25dde58ae0f593e94e7aa75a739a86f67967012f69e2199b1
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="libc++"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="

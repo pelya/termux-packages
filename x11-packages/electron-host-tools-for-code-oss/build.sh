@@ -2,8 +2,9 @@ TERMUX_PKG_HOMEPAGE=https://github.com/electron/electron
 TERMUX_PKG_DESCRIPTION="Build cross-platform desktop apps with JavaScript, HTML, and CSS (Used by Code-OSS, Host Tools)"
 TERMUX_PKG_LICENSE="MIT, BSD 3-Clause"
 TERMUX_PKG_MAINTAINER="@licy183"
-_CHROMIUM_VERSION=138.0.7204.235
-TERMUX_PKG_VERSION=37.3.1
+_CHROMIUM_VERSION=148.0.7778.97
+TERMUX_PKG_VERSION=42.2.0
+TERMUX_PKG_REVISION=1
 TERMUX_PKG_SRCURL=git+https://github.com/electron/electron
 TERMUX_PKG_DEPENDS="atk, cups, dbus, fontconfig, gtk3, krb5, libc++, libevdev, libxkbcommon, libminizip, libnss, libx11, mesa, openssl, pango, pulseaudio, zlib"
 TERMUX_PKG_BUILD_DEPENDS="libnotify, libffi-static"
@@ -50,6 +51,13 @@ termux_step_get_source() {
 }
 
 termux_step_post_get_source() {
+	# Apply patches related to cxx23
+	local f
+	for f in $(find "$TERMUX_PKG_BUILDER_DIR/cxx-patches" -maxdepth 1 -type f -name *.patch | sort); do
+		echo "Applying patch: $(basename $f)"
+		patch --silent -p1 < "$f"
+	done
+
 	# Apply patches related to chromium
 	local f
 	for f in $(find "$TERMUX_PKG_BUILDER_DIR/cr-patches" -maxdepth 1 -type f -name *.patch | sort); do
@@ -63,6 +71,14 @@ termux_step_post_get_source() {
 		echo "Applying patch: $(basename $f)"
 		patch --silent -p1 < "$f"
 	done
+
+	# Enable jumbo build for //components and //chrome
+	python \
+		"$TERMUX_PKG_BUILDER_DIR/../chromium-host-tools/scripts/rewrite_gn_jumbo.py" \
+		"$TERMUX_PKG_SRCDIR" \
+		--verbose \
+		--subdirs chrome \
+		--subdirs components
 
 	# Apply patches for jumbo build
 	local f
@@ -140,8 +156,6 @@ termux_step_configure() {
 		cp -Rf $TERMUX_PREFIX/include/* usr/include
 		cp -Rf $TERMUX_PREFIX/lib/* usr/lib
 		ln -sf /data ./data
-		# This is needed to build crashpad
-		rm -rf $TERMUX_PREFIX/include/spawn.h
 		# This is needed to build cups
 		cp -Rf $TERMUX_PREFIX/bin/cups-config usr/bin/
 		chmod +x usr/bin/cups-config
@@ -206,6 +220,7 @@ use_bundled_fontconfig = false
 use_system_freetype = false
 use_custom_libcxx = false
 use_custom_libcxx_for_host = true
+use_clang_modules = false
 use_allocator_shim = false
 use_partition_alloc_as_malloc = false
 enable_backup_ref_ptr_slow_checks = false
@@ -216,22 +231,22 @@ enable_backup_ref_ptr_support = false
 enable_pointer_compression_support = false
 use_nss_certs = true
 use_udev = false
-use_alsa = false
-use_libpci = false
-use_pulseaudio = true
 use_ozone = true
 ozone_auto_platforms = false
 ozone_platform = \"x11\"
 ozone_platform_x11 = true
+# TODO: Enable wayland
 ozone_platform_wayland = false
 ozone_platform_headless = true
 angle_enable_vulkan = true
 angle_enable_swiftshader = true
 angle_enable_abseil = false
+use_libpci = false
+use_alsa = false
+use_pulseaudio = true
 rtc_use_pipewire = false
 use_vaapi = false
 # See comments on Chromium package
-enable_nacl = false
 is_cfi = false
 use_cfi_icall = false
 use_thin_lto = false
@@ -240,7 +255,7 @@ build_tflite_with_opencl = false
 build_tflite_with_nnapi = true
 # Enable rust
 custom_target_rust_abi_target = \"$CARGO_TARGET_NAME\"
-llvm_android_mainline = true
+clang_warning_suppression_file = \"\"
 exclude_unwind_tables = false
 # Enable jumbo build (unified build)
 use_jumbo_build = true
@@ -350,9 +365,10 @@ termux_step_make_install() {
 		bytecode_builtins_list_generator # generate_bytecode_builtins_list
 		gen-regexp-special-case          # v8:run_gen-regexp-special-case
 		node_js2c						 # electron:node_js2c_exec
+		icudtl.dat                       # icu data
 	)
 	mkdir -p "$_install_prefix/$cr_v8_toolchain/"
-	cp "${v8_tools[@]/#/out/Release/$cr_v8_toolchain/}" "$_install_prefix/$cr_v8_toolchain/"
+	cp -f "${v8_tools[@]/#/out/Release/$cr_v8_toolchain/}" "$_install_prefix/$cr_v8_toolchain/"
 
 	local host_tools=(
 		# make_top_domain_list_variables     # generate_top_domain_list_variables_file
@@ -364,7 +380,7 @@ termux_step_make_install() {
 		icudtl.dat                         # icu data
 	)
 	mkdir -p "$_install_prefix/host/"
-	cp "${host_tools[@]/#/out/Release/host/}" "$_install_prefix/host/"
+	cp -f "${host_tools[@]/#/out/Release/host/}" "$_install_prefix/host/"
 
 	local normal_files=(
 		# v8 snapshot data
@@ -375,7 +391,7 @@ termux_step_make_install() {
 		libvk_swiftshader.so
 		vk_swiftshader_icd.json
 	)
-	cp "${normal_files[@]/#/out/Release/}" "$_install_prefix/"
+	cp -f "${normal_files[@]/#/out/Release/}" "$_install_prefix/"
 
 	# mkdir -p "$_install_prefix/obj/third_party/pdfium/"
 	# cp "out/Release/obj/third_party/pdfium/libpdfium.a" "$_install_prefix/obj/third_party/pdfium/"
