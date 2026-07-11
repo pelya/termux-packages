@@ -1,4 +1,5 @@
-Only in src-old: commands-aarch64-termux-root.h
+Required to run generate-db.js locally on the build server, when TERMUX_PREFIX is not com.termux
+
 diff -u -r src-old/generate-db.js src/generate-db.js
 --- src-old/generate-db.js	2025-07-01 11:12:10.000000000 +0300
 +++ src/generate-db.js	2025-09-16 15:03:58.678858864 +0300
