@@ -127,9 +127,10 @@ pull_package() {
 		fi
 		# Read from local compiled .deb files
 		package_url="file://$TERMUX_SCRIPTDIR/output/$(basename $(echo "${PACKAGE_METADATA[${package_name}]}" | grep -i "^Filename:" | awk '{ print $2 }'))"
-		# Replace versin number for one specific package
+		# Replace versin number for one specific package, because filelist is downloaded from
+		# the Termux official package server and not from this git fork
 		if [ "${package_url}" = "file://$TERMUX_SCRIPTDIR/output/termux-am_0.8.0-2_all.deb" ]; then
-			package_url="file://$TERMUX_SCRIPTDIR/output/termux-am_0.8.1-pelya-2_all.deb"
+			package_url="file://$TERMUX_SCRIPTDIR/output/termux-am_0.8.3-pelya-2_all.deb"
 		fi
 
 		local package_dependencies
@@ -297,7 +298,8 @@ create_bootstrap_archive() {
 		zip -r9 "${BOOTSTRAP_TMPDIR}/bootstrap-${1}.zip" ./*
 	)
 
-	mv -f "${BOOTSTRAP_TMPDIR}/bootstrap-${1}.zip" ./
+	mkdir -p output/bootstrap
+	mv -f "${BOOTSTRAP_TMPDIR}/bootstrap-${1}.zip" ./output/bootstrap/
 	echo "[*] Finished successfully (${1})."
 }
 
