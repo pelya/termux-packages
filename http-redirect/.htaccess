@@ -1,0 +1,16 @@
+RewriteEngine On
+
+# Redirect everything
+RewriteRule ^dists/termux-main/Release$ https://github.com/pelya/termux-packages/releases/download/packages/Release [R=301,L]
+
+RewriteRule ^dists/termux-main/main/binary-(.*)/Packages$ https://github.com/pelya/termux-packages/releases/download/packages/Packages-$1 [R=301,L]
+RewriteRule ^dists/termux-main/main/binary-(.*)/Packages\.xz$ https://github.com/pelya/termux-packages/releases/download/packages/Packages-$1.xz [R=301,L]
+
+RewriteRule ^dists/termux-main/main/Contents-(.*)$ https://github.com/pelya/termux-packages/releases/download/packages/Contents-(.*) [R=301,L]
+RewriteRule ^dists/termux-main/main/Contents-(.*)\.xz$ https://github.com/pelya/termux-packages/releases/download/packages/Contents-(.*).xz [R=301,L]
+
+RewriteRule ^dists/termux-main/main/binary-aarch64/(.*)$ https://github.com/pelya/termux-packages/releases/download/packages/$1 [R=301,L]
+RewriteRule ^dists/termux-main/main/binary-all/(.*)$ https://github.com/pelya/termux-packages/releases/download/packages/$1 [R=301,L]
+RewriteRule ^dists/termux-main/main/binary-arm/(.*)$ https://github.com/pelya/termux-packages/releases/download/packages/$1 [R=301,L]
+RewriteRule ^dists/termux-main/main/binary-i686/(.*)$ https://github.com/pelya/termux-packages/releases/download/packages/$1 [R=301,L]
+RewriteRule ^dists/termux-main/main/binary-x86_64/(.*)$ https://github.com/pelya/termux-packages/releases/download/packages/$1 [R=301,L]
