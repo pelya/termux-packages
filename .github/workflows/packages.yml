@@ -450,8 +450,10 @@ jobs:
         GH_TOKEN: ${{ github.token }}
         GITHUB_SHA: ${{ github.sha }}
       run: |
+        echo "Uploading .deb files"
         for archive in debs-*/debs-{aarch64,arm,i686,x86_64}-${{ github.sha }}.tar; do
-          tar xf "$archive"
+          echo "Extracting $archive"
+          tar xvf "$archive"
         done
 
         for repo in $(jq --raw-output 'del(.pkg_format) | keys | .[]' repo.json); do
@@ -463,9 +465,12 @@ jobs:
           uploaded_files=false
           shopt -s nullglob
 
+          echo "Reading debs/built_${REPOSITORY_NAME}_packages.txt"
+
           if [ -f debs/built_${REPOSITORY_NAME}_packages.txt ]; then
             for filename in $(cat debs/built_${REPOSITORY_NAME}_packages.txt | sed -E 's/(..*)/debs\/\1_\*.deb debs\/\1-static_\*.deb/g'); do
               PACKAGE_ARCH="$(echo "$filename" | sed -E 's/.*_(aarch64|all|arm|i686|x86_64).deb$/\1/' )"
+              echo "Uploading $filename to dists/${REPOSITORY_NAME}/${REPOSITORY_COMPONENT}/binary-${PACKAGE_ARCH}"
               if ! gh release upload --clobber dists/${REPOSITORY_NAME}/${REPOSITORY_COMPONENT}/binary-${PACKAGE_ARCH} "$filename"; then
                 exit 1
               fi
@@ -478,3 +483,5 @@ jobs:
             # TODO: generate Contents.xz and Packages.xz using termux-apt-repo command
           fi
         done
+
+        echo "Uploading .deb files finished"
