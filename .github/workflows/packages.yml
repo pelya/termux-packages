@@ -435,7 +435,7 @@ jobs:
     concurrency: ${{ github.workflow }}
     permissions:
       contents: read
-    if: github.repository == 'termux/termux-packages' && github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' # github.repository == 'termux/termux-packages'
     needs: build
     runs-on: ubuntu-slim
     steps:
