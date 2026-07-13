@@ -457,20 +457,16 @@ jobs:
 
         for repo in $(jq --raw-output 'del(.pkg_format) | keys | .[]' repo.json); do
           export REPOSITORY_NAME=$(jq --raw-output '.["'$repo'"].name' repo.json)
-          export REPOSITORY_DISTRIBUTION=$(jq --raw-output '.["'$repo'"].distribution' repo.json)
-          export REPOSITORY_COMPONENT=$(jq --raw-output '.["'$repo'"].component' repo.json)
 
           # Upload file to temporary directory.
           uploaded_files=false
           shopt -s nullglob
 
-          echo "Reading debs/built_${REPOSITORY_NAME}_packages.txt"
-
           if [ -f debs/built_${REPOSITORY_NAME}_packages.txt ]; then
             for filename in $(cat debs/built_${REPOSITORY_NAME}_packages.txt | sed -E 's/(..*)/debs\/\1_\*.deb debs\/\1-static_\*.deb/g'); do
               PACKAGE_ARCH="$(echo "$filename" | sed -E 's/.*_(aarch64|all|arm|i686|x86_64).deb$/\1/' )"
-              # echo "Uploading $filename to dists/${REPOSITORY_NAME}/${REPOSITORY_COMPONENT}/binary-${PACKAGE_ARCH}"
-              if ! gh release upload --clobber dists/${REPOSITORY_NAME}/${REPOSITORY_COMPONENT}/binary-${PACKAGE_ARCH} "$filename"; then
+              # echo "Uploading $filename to packages"
+              if ! gh release upload --clobber packages "$filename"; then
                 exit 1
               fi
 
