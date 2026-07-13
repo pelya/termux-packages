@@ -447,7 +447,7 @@ jobs:
         path: ./
     - name: Upload to Github release named `packages`
       env:
-        GH_TOKEN: ${{ github.token }}
+        GH_TOKEN: ${{ secrets.DISTS_UPLOAD_TOKEN }}
         GITHUB_SHA: ${{ github.sha }}
       run: |
         echo "Uploading .deb files"
