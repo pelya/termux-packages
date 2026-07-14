@@ -495,7 +495,7 @@ jobs:
 
           if [ -f debs/built_${REPOSITORY_NAME}_packages.txt ]; then
             for filename in $(cat debs/built_${REPOSITORY_NAME}_packages.txt | sed -E 's/(..*)/debs\/\1_\*.deb debs\/\1-static_\*.deb/g'); do
-              PACKAGE_NAME="$(echo "$filename" | sed -E 's/^([^_]+).*/\1/' )"
+              PACKAGE_NAME="$(echo "$filename" | sed -E 's/^debs[/]([^_]+).*/\1/' )"
               PACKAGE_ARCH="$(echo "$filename" | sed -E 's/.*_(aarch64|all|arm|i686|x86_64).deb$/\1/' )"
               # example path: termux-main/dists/termux-main/main/binary-aarch64/bash_5.3.9-1_aarch64.deb
               # Remove all other versions of the package
@@ -506,9 +506,7 @@ jobs:
             shopt -u nullglob
           fi
 
-          if $uploaded_files; then
-            continue
-          fi
+          $uploaded_files || continue
 
           # Publishing repository changes.
           rm -rf tmp-debs
