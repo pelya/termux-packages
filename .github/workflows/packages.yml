@@ -478,6 +478,8 @@ jobs:
         GH_TOKEN: ${{ secrets.DISTS_UPLOAD_TOKEN }}
         GITHUB_SHA: ${{ github.sha }}
       run: |
+        set -x
+
         for archive in debs-*/debs-{aarch64,arm,i686,x86_64}-${{ github.sha }}.tar; do
           tar xf "$archive"
         done
@@ -511,6 +513,7 @@ jobs:
           # Publishing repository changes.
           rm -rf tmp-debs
           mkdir -p tmp-debs
+          find ${REPOSITORY_NAME} -name '*.deb'
           find ${REPOSITORY_NAME} -name '*.deb' | xargs mv -t tmp-debs || true
           termux-apt-repo/termux-apt-repo --use-hard-links tmp-debs ${REPOSITORY_NAME} ${REPOSITORY_DISTRIBUTION} ${REPOSITORY_COMPONENT} || exit 1
 
