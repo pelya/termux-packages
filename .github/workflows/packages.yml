@@ -484,6 +484,7 @@ jobs:
         GH_TOKEN: ${{ secrets.DISTS_UPLOAD_TOKEN }}
         GITHUB_SHA: ${{ github.sha }}
       run: |
+        set -x
         for archive in debs-*/debs-{aarch64,arm,i686,x86_64}-${{ github.sha }}.tar; do
           tar xf "$archive"
         done
@@ -505,7 +506,7 @@ jobs:
               # example path: termux-main/dists/termux-main/main/binary-aarch64/bash_5.3.9-1_aarch64.deb
               # Remove all other versions of the package
               rm -f ${REPOSITORY_NAME}/dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-${PACKAGE_ARCH}/${PACKAGE_NAME}_*_${PACKAGE_ARCH}.deb
-              mv -f "$filename" ${REPOSITORY_NAME}/
+              mv -f "$filename" ${REPOSITORY_NAME}/ || true
               uploaded_files=true
             done
             shopt -u nullglob
