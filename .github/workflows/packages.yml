@@ -522,7 +522,7 @@ jobs:
 
           cd ${REPOSITORY_NAME} || exit 1
           
-          gpg --detach-sign --armor \
+          gpg --detach-sign --armor --yes --pinentry-mode loopback \
             -o dists/${REPOSITORY_DISTRIBUTION}/Release.gpg \
             dists/${REPOSITORY_DISTRIBUTION}/Release
           
