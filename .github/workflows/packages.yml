@@ -520,7 +520,7 @@ jobs:
           
 
           cd ${REPOSITORY_NAME} || exit 1
-          find .
+          
           gpg --detach-sign --armor \
             -o dists/${REPOSITORY_DISTRIBUTION}/Release.gpg \
             dists/${REPOSITORY_DISTRIBUTION}/Release
