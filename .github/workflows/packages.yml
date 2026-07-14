@@ -521,11 +521,16 @@ jobs:
 
           cd ${REPOSITORY_NAME} || exit 1
           find .
+          gpg --detach-sign --armor \
+            -o dists/${REPOSITORY_DISTRIBUTION}/Release.gpg \
+            dists/${REPOSITORY_DISTRIBUTION}/Release
+          
           git config --local user.email "buildbot@termux.dev"
           git config --local user.name "Termux build bot"
           git add dists
           git commit -m 'Metadata' \
             dists/${REPOSITORY_DISTRIBUTION}/Release \
+            dists/${REPOSITORY_DISTRIBUTION}/Release.gpg \
             dists/${REPOSITORY_DISTRIBUTION}/InRelease \
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/Contents-* \
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages \
