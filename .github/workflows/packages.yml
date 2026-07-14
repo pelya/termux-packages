@@ -516,15 +516,17 @@ jobs:
           rm -rf tmp-debs
           mkdir -p tmp-debs
           find ${REPOSITORY_NAME} -name '*.deb' | xargs mv -t tmp-debs || true
-          termux-apt-repo/termux-apt-repo --use-hard-links tmp-debs ${REPOSITORY_NAME} ${REPOSITORY_DISTRIBUTION} ${REPOSITORY_COMPONENT} || exit 1
-          find . -name '*.deb'
+          termux-apt-repo/termux-apt-repo --sign --use-hard-links tmp-debs ${REPOSITORY_NAME} ${REPOSITORY_DISTRIBUTION} ${REPOSITORY_COMPONENT} || exit 1
+          
 
           cd ${REPOSITORY_NAME} || exit 1
+          find .
           git config --local user.email "buildbot@termux.dev"
           git config --local user.name "Termux build bot"
           git add dists
           git commit -m 'Metadata' \
             dists/${REPOSITORY_DISTRIBUTION}/Release \
+            dists/${REPOSITORY_DISTRIBUTION}/InRelease \
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/Contents-* \
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages \
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages.xz || true
