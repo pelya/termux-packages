@@ -513,8 +513,9 @@ jobs:
           mkdir -p tmp-debs
           find ${REPOSITORY_NAME} -name '*.deb' | xargs mv -t tmp-debs || true
           termux-apt-repo/termux-apt-repo --use-hard-links tmp-debs ${REPOSITORY_NAME} ${REPOSITORY_DISTRIBUTION} ${REPOSITORY_COMPONENT} || exit 1
+          find . -name '*.deb'
 
-          cd ${REPOSITORY_NAME}
+          cd ${REPOSITORY_NAME} || exit 1
           git config --local user.email "buildbot@termux.dev"
           git config --local user.name "Termux build bot"
           git commit -m 'Metadata' \
