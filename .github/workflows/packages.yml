@@ -478,8 +478,9 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.DISTS_UPLOAD_TOKEN }}
         GITHUB_SHA: ${{ github.sha }}
+        GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
       run: |
-        set -x
+
 
         for archive in debs-*/debs-{aarch64,arm,i686,x86_64}-${{ github.sha }}.tar; do
           tar xf "$archive"
