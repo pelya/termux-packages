@@ -297,6 +297,7 @@ jobs:
           DEPENDENCIES=""
           if ${{ github.event.inputs.download-dependencies }}; then
             DEPENDENCIES="-I"
+            ./scripts/run-docker.sh -d gpg --import packages/termux-keyring/pelya.gpg
           fi
           ./scripts/run-docker.sh -d ./build-package.sh $DEPENDENCIES -C -a "${{ matrix.target_arch }}" "${packages[@]}"
         fi
