@@ -518,17 +518,17 @@ jobs:
           cd ${REPOSITORY_NAME}
           git config --local user.email "buildbot@termux.dev"
           git config --local user.name "Termux build bot"
+          git commit -m 'Metadata' \
+            dists/${REPOSITORY_DISTRIBUTION}/Release \
+            dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/Contents-* \
+            dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages \
+            dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages.xz || true
           git add dists
           if git diff --exit-code --quiet; then
-            git commit -m 'Metadata' \
-              dists/${REPOSITORY_DISTRIBUTION}/Release \
-              dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/Contents-* \
-              dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages \
-              dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages.xz
-            git commit -m 'Packages' -a
-            git push
-          else
             echo "Nothing to commit, repository ${REPOSITORY_NAME} unchanged"
+          else
+            git commit -m 'Packages' -a || exit 1
+            git push || exit 1
           fi
           cd ..
 
