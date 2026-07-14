@@ -516,14 +516,20 @@ jobs:
           termux-apt-repo/termux-apt-repo --use-hard-links tmp-debs ${REPOSITORY_NAME} ${REPOSITORY_DISTRIBUTION} ${REPOSITORY_COMPONENT} || exit 1
 
           cd ${REPOSITORY_NAME}
-          git add dists/${REPOSITORY_DISTRIBUTION}/Release \
-            dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/Contents-* \
-            dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages \
-            dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages.xz
-          git commit --author 'Termux build bot <buildbot@termux.dev>' -m 'Metadata' || exit 1
+          git config --local user.email "buildbot@termux.dev"
+          git config --local user.name "Termux build bot"
           git add dists
-          git commit --author 'Termux build bot <buildbot@termux.dev>' -m 'Packages' dists || exit 1
-          git push || exit 1
+          if git diff --exit-code --quiet; then
+            git commit -m 'Metadata' \
+              dists/${REPOSITORY_DISTRIBUTION}/Release \
+              dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/Contents-* \
+              dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages \
+              dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages.xz
+            git commit -m 'Packages' -a
+            git push
+          else
+            echo "Nothing to commit, repository ${REPOSITORY_NAME} unchanged"
+          fi
           cd ..
 
         done
