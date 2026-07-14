@@ -526,10 +526,7 @@ jobs:
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages \
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages.xz || true
           
-          if git diff --exit-code --quiet; then
-            echo "Nothing to commit, repository ${REPOSITORY_NAME} unchanged"
-          else
-            git commit -m 'Packages' -a || exit 1
+          if git commit -m 'Packages' -a; then
             git push || exit 1
           fi
           cd ..
