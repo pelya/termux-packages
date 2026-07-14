@@ -24,6 +24,10 @@ on:
         description: "Free space even if not building large package (useful when building a large number of packages)"
         type: boolean
         default: false
+      download-dependencies:
+        description: "Download already built packages as dependencies, uncheck if the packages repository is empty"
+        type: boolean
+        default: true
 
 permissions: {} # none
 
@@ -289,7 +293,11 @@ jobs:
         echo "packages: ${packages[*]}"
 
         if [[ "${#packages[@]}" -gt 0 ]]; then
-          ./scripts/run-docker.sh -d ./build-package.sh -I -C -a "${{ matrix.target_arch }}" "${packages[@]}"
+          DEPENDENCIES=""
+          if ${{ github.event.inputs.download-dependencies }}; then
+            DEPENDENCIES="-I"
+          fi
+          ./scripts/run-docker.sh -d ./build-package.sh $DEPENDENCIES -C -a "${{ matrix.target_arch }}" "${packages[@]}"
         fi
 
     - name: Generate build artifacts
