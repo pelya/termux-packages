@@ -474,17 +474,19 @@ jobs:
         token: ${{ secrets.DISTS_UPLOAD_TOKEN }}
         path: termux-x11
     # There is no root repo, because root does not work inside greater.underscore app
+    - name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v7
+      with:
+        gpg_private_key: ${{ secrets.GPG_SECRET_KEY }}
     - name: Upload to apt repos
       env:
         GH_TOKEN: ${{ secrets.DISTS_UPLOAD_TOKEN }}
         GITHUB_SHA: ${{ github.sha }}
-        GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
-      run: |
-
-
+      run|
         for archive in debs-*/debs-{aarch64,arm,i686,x86_64}-${{ github.sha }}.tar; do
           tar xf "$archive"
         done
+        gpg -K
 
         for repo in $(jq --raw-output 'del(.pkg_format) | keys | .[]' repo.json); do
           export REPOSITORY_NAME=$(jq --raw-output '.["'$repo'"].name' repo.json)
