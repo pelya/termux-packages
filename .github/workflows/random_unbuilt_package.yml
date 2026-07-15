@@ -8,11 +8,13 @@ on:
 permissions: {} # none
 
 jobs:
-  random-build:
+  RandomName:
     permissions:
       contents: read
     if: github.repository == 'pelya/termux-packages'
     runs-on: ubuntu-slim
+    outputs:
+      PACKAGE_NAME: ${{ steps.GetName.outputs.PACKAGE_NAME }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v7
@@ -26,8 +28,12 @@ jobs:
           echo PACKAGE_NAME=$RANDOM_PACKAGE_NAME
           echo "PACKAGE_NAME=$RANDOM_PACKAGE_NAME" >> $GITHUB_OUTPUT
 
-      - name: Build ${{ steps.GetName.outputs.PACKAGE_NAME }}
-        if: ${{ steps.GetName.outputs.PACKAGE_NAME != '' }}
-        uses: pelya/termux-packages/.github/workflows/packages.yml@master
-        with:
-          packages: ${{ steps.GetName.outputs.PACKAGE_NAME }}
+  Build:
+    permissions:
+      contents: read
+    needs: RandomName
+    name: Build ${{ needs.RandomName.outputs.PACKAGE_NAME }}
+    if: ${{ needs.RandomName.outputs.PACKAGE_NAME }} && github.repository == 'pelya/termux-packages'
+    uses: pelya/termux-packages/.github/workflows/packages.yml@master
+    with:
+      packages: ${{ needs.RandomName.outputs.PACKAGE_NAME }}
