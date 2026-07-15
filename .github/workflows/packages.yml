@@ -295,7 +295,7 @@ jobs:
 
         if [[ "${#packages[@]}" -gt 0 ]]; then
           DEPENDENCIES=""
-          if ${{ github.event.inputs.download-dependencies }}; then
+          if [ "${{ github.event.inputs.download-dependencies }}" = true ]; then
             DEPENDENCIES="-I"
           fi
           ./scripts/run-docker.sh -d ./build-package.sh -Q $DEPENDENCIES -C -a "${{ matrix.target_arch }}" "${packages[@]}"
