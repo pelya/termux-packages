@@ -46,7 +46,7 @@ concurrency:
 
 jobs:
   build:
-    name: build ${{ github.event.inputs.packages }} -- ${{ inputs.packages }}
+    name: build ${{ inputs.packages }}
     permissions:
       contents: read # actions/upload-artifact doesn't need contents: write
     runs-on: ubuntu-26.04
@@ -63,7 +63,7 @@ jobs:
     - name: Gather build summary
       id: build-info
       env:
-        MANUAL_INPUT_PACKAGES: ${{ github.event.inputs.packages }}
+        MANUAL_INPUT_PACKAGES: ${{ inputs.packages }}
       run: |
         # We are intentionally not using .commits[0].id and .commits[-1].id as github seems to
         # only send 20 commits in the payload for github action runs instead of the 2048 documented
