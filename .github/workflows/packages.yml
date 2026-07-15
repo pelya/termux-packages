@@ -20,6 +20,7 @@ on:
       packages:
         description: "A space-separated names of packages selected for rebuilding"
         required: true
+        type: string
       free-space:
         description: "Free space even if not building large package (useful when building a large number of packages)"
         type: boolean
@@ -33,6 +34,7 @@ on:
       packages:
         description: "A space-separated names of packages selected for rebuilding"
         required: true
+        type: string
 
 permissions: {} # none
 
