@@ -2,7 +2,7 @@ name: Build random unbuilt package
 
 on:
   schedule:
-    - cron: "8-59/15 * * * *" # Run once per hour
+    - cron: "*/30 * * * *" # Run once per hour
   workflow_dispatch:
 
 permissions: {} # none
@@ -24,9 +24,9 @@ jobs:
       - name: Get package name
         id: GetName
         run: |
-          PACKAGE_NAME="$(scripts/bin/random-package-not-in-repo)"
-          echo PACKAGE_NAME=$PACKAGE_NAME
-          echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+          PACKAGE_NAME="$(for i in 1 2 3 4 5; do scripts/bin/random-package-not-in-repo; done)"
+          echo PACKAGE_NAME="$PACKAGE_NAME"
+          echo "PACKAGE_NAME='$PACKAGE_NAME'" >> $GITHUB_OUTPUT
 
   Build:
     permissions:
