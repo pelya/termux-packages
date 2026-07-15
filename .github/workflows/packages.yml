@@ -30,12 +30,12 @@ on:
         type: boolean
         default: false
   workflow_call:
+    secrets: 
+      DISTS_UPLOAD_TOKEN:
+        required: true
+      GPG_SECRET_KEY:
+        required: true
     inputs:
-      secrets: 
-        DISTS_UPLOAD_TOKEN:
-          required: true
-        GPG_SECRET_KEY:
-          required: true
       packages:
         description: "A space-separated names of packages selected for rebuilding"
         required: true
