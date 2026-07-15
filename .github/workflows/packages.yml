@@ -457,7 +457,7 @@ jobs:
     - name: Checkout termux-apt-repo script
       uses: actions/checkout@v7
       with:
-        repository: termux/termux-apt-repo
+        repository: pelya/termux-apt-repo
         path: termux-apt-repo
     - name: Checkout main compiled packages repo
       uses: actions/checkout@v7
@@ -520,9 +520,6 @@ jobs:
           termux-apt-repo/termux-apt-repo --sign --use-hard-links tmp-debs ${REPOSITORY_NAME} ${REPOSITORY_DISTRIBUTION} ${REPOSITORY_COMPONENT} || exit 1
 
           cd ${REPOSITORY_NAME} || exit 1
-          gpg --detach-sign --armor --yes --pinentry-mode loopback \
-            -o dists/${REPOSITORY_DISTRIBUTION}/Release.gpg \
-            dists/${REPOSITORY_DISTRIBUTION}/Release
           git config --local user.email "buildbot@termux.dev"
           git config --local user.name "Termux build bot"
           git add dists
