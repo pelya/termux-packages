@@ -71,4 +71,7 @@ termux_step_create_debian_package() {
 		"$TERMUX_COMMON_CACHEDIR/debian-binary" \
 		"$TERMUX_PKG_PACKAGEDIR/control.tar.xz" \
 		"$TERMUX_PKG_PACKAGEDIR/data.tar.xz"
+
+	TERMUX_PKG_REPO_NAME="$(basename $(dirname ${TERMUX_PKG_BUILDER_DIR}))"
+	echo "$(basename ${TERMUX_PKG_DEBFILE})" >> $TERMUX_OUTPUT_DIR/built_${TERMUX_PKG_REPO_NAME}.txt
 }

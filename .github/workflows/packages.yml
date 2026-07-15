@@ -306,7 +306,6 @@ jobs:
       run: |
         test -d termux-packages/output && mv termux-packages/output/* ./output/
         test -f output/downloads.txt && mv output/downloads.txt debs/
-        find output
 
         for repo in $(jq --raw-output 'del(.pkg_format) | .[].name' repo.json); do
           # Put package lists into directory with *.deb files so they will be transferred to
@@ -502,7 +501,6 @@ jobs:
             for filename in $(cat debs/built_${REPOSITORY_NAME}_packages.txt | sed -E 's/(..*)/debs\/\1_\*.deb debs\/\1-static_\*.deb/g'); do
               PACKAGE_NAME="$(echo "$filename" | sed -E 's/^debs[/]([^_]+).*/\1/' )"
               PACKAGE_ARCH="$(echo "$filename" | sed -E 's/.*_(aarch64|all|arm|i686|x86_64).deb$/\1/' )"
-              # example path: termux-main/dists/termux-main/main/binary-aarch64/bash_5.3.9-1_aarch64.deb
               # Remove all other versions of the package
               rm -f ${REPOSITORY_NAME}/dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-${PACKAGE_ARCH}/${PACKAGE_NAME}_*_${PACKAGE_ARCH}.deb
               mv -f "$filename" ${REPOSITORY_NAME}/ || true

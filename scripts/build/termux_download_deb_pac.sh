@@ -119,12 +119,6 @@ termux_download_deb_pac() {
 	termux_download "${TERMUX_REPO_URL[${idx}-1]}/${PKG_PATH}" \
 				"${TERMUX_COMMON_CACHEDIR}-${PACKAGE_ARCH}/${PKG_FILE}" \
 				"$PKG_HASH"
-	echo ===========
-	echo TERMUX_OUTPUT_DIR=${TERMUX_OUTPUT_DIR}
-	echo Creating downloads.txt
-	echo "${PKG_FILE}" → "${TERMUX_OUTPUT_DIR}/downloads.txt"
-
-	echo ===========
 	echo "${PKG_FILE}" >> "${TERMUX_OUTPUT_DIR}/downloads.txt"
 }
 

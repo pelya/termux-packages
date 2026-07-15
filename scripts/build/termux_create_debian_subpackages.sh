@@ -157,6 +157,9 @@ termux_create_debian_subpackages() {
 				   "$SUB_PKG_PACKAGE_DIR/control.tar.xz" \
 				   "$SUB_PKG_PACKAGE_DIR/data.tar.xz"
 
+		TERMUX_PKG_REPO_NAME="$(basename $(dirname ${TERMUX_PKG_BUILDER_DIR}))"
+		echo "$(basename ${TERMUX_SUBPKG_DEBFILE})" >> $TERMUX_OUTPUT_DIR/built_${TERMUX_PKG_REPO_NAME}.txt
+
 		# Go back to main package:
 		cd "$TERMUX_PKG_MASSAGEDIR/$TERMUX_PREFIX_CLASSICAL"
 	done
