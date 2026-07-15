@@ -37,6 +37,7 @@ jobs:
     uses: pelya/termux-packages/.github/workflows/packages.yml@master
     with:
       packages: ${{ needs.RandomName.outputs.PACKAGE_NAME }}
-      secrets: inherit
-      
-
+      secrets:
+        GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
+        DISTS_UPLOAD_TOKEN: ${{ secrets.DISTS_UPLOAD_TOKEN }}
+        
