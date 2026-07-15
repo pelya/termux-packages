@@ -46,7 +46,7 @@ concurrency:
 
 jobs:
   build:
-    name: build ${{ github.event.inputs.packages }} -- ${{ inputs.packages }} -- ${{ on.workflow_call.inputs.packages }}
+    name: build ${{ github.event.inputs.packages }} -- ${{ inputs.packages }}
     permissions:
       contents: read # actions/upload-artifact doesn't need contents: write
     runs-on: ubuntu-26.04
