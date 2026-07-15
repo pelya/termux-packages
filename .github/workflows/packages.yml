@@ -78,6 +78,8 @@ jobs:
         # https://docs.github.com/en/webhooks/webhook-events-and-payloads#push
         OLD_COMMIT="${{ github.event.before }}"
         HEAD_COMMIT="${{ github.event.after }}"
+        [ -z "$OLD_COMMIT" ] && OLD_COMMIT=HEAD
+        [ -z "$HEAD_COMMIT" ] && HEAD_COMMIT=HEAD
         if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
           BASE_REF="${{ github.event.pull_request.base.ref }}"
           git fetch origin "${BASE_REF:-master}" 2>/dev/null
