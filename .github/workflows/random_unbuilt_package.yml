@@ -2,7 +2,7 @@ name: Build random unbuilt package
 
 on:
   schedule:
-    - cron: "0 * * * *" # Run once per hour
+    - cron: "*/20 * * * *" # Run once per hour
   workflow_dispatch:
 
 permissions: {} # none
