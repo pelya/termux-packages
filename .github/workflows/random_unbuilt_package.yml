@@ -19,7 +19,7 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Get package name
         id: GetName
