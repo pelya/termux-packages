@@ -306,6 +306,7 @@ jobs:
       if: always()
       run: |
         test -d termux-packages/output && mv termux-packages/output/* ./output/
+        test -f ./output/downloads.txt && mv ./output/downloads.txt ./debs/
 
         for repo in $(jq --raw-output 'del(.pkg_format) | .[].name' repo.json); do
           # Put package lists into directory with *.deb files so they will be transferred to
@@ -314,14 +315,15 @@ jobs:
           test -f ./built_${repo}_subpackages.txt && cat ./built_${repo}_subpackages.txt >> ./debs/built_${repo}_packages.txt \
             && rm ./built_${repo}_subpackages.txt
           test -f ./deleted_${repo}_packages.txt && mv ./deleted_${repo}_packages.txt ./debs/
+           
 
           # Move only debs from built_packages into debs/ folder before
           # creating an archive.
-          if [ -f "./debs/built_${repo}_packages.txt" ] && [ -d "output" ]; then
-            while read -r pkg; do
-              # Match both $pkg.deb and $pkg-static.deb.
-              find output \( -name "$pkg_*.deb" -o -name "$pkg-static_*.deb" \) -type f -print0 | xargs -0r mv -t debs/
-            done < <(cat "./debs/built_${repo}_packages.txt")
+          if [ -d "output" ]; then
+            
+            # Match both $pkg.deb and $pkg-static.deb.
+            find output -name '*.deb' -type f -print0 | xargs -0r mv -t debs/
+            
           fi
         done
 
@@ -486,7 +488,7 @@ jobs:
       run: |
         set -x
         for archive in debs-*/debs-{aarch64,arm,i686,x86_64}-${{ github.sha }}.tar; do
-          tar xf "$archive"
+          tar xvf "$archive"
         done
         gpg -K
 
