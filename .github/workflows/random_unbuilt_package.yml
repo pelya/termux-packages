@@ -24,7 +24,7 @@ jobs:
       - name: Get package name
         id: GetName
         run: |
-          PACKAGE_NAME="$(for i in 1 2 3 4 5; do scripts/bin/random-package-not-in-repo; done | xargs echo)"
+          PACKAGE_NAME="$(for i in 1 2 3; do scripts/bin/random-package-not-in-repo; done | xargs echo)"
           echo "PACKAGE_NAME=$PACKAGE_NAME"
           echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_OUTPUT
 
