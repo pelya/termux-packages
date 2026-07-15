@@ -31,6 +31,9 @@ on:
         default: false
   workflow_call:
     inputs:
+      secrets: 
+        DISTS_UPLOAD_TOKEN
+        GPG_SECRET_KEY
       packages:
         description: "A space-separated names of packages selected for rebuilding"
         required: true
