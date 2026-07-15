@@ -1,0 +1,37 @@
+#!/bin/sh
+# Randomise buildorder.py test on packages directory
+
+export TERMUX_SCRIPTDIR
+TERMUX_SCRIPTDIR=$(realpath "$(dirname "$0")/../..") # Root of repository.
+
+cd "${TERMUX_SCRIPTDIR}" || exit 1
+
+no_of_total_packages=0
+no_of_filter_packages=0
+
+total_packages=$(find packages -maxdepth 1 -type d | sort)
+filter_packages=$(find packages -maxdepth 2 -type f -name build.sh | xargs -P$(nproc) -i sh -c "if ! grep -E "^TERMUX_PKG_EXCLUDED_ARCHES=.*${TERMUX_ARCH}" {} >/dev/null; then dirname {}; fi" | sort)
+
+[ -n "${total_packages}" ] && no_of_total_packages=$(echo "${total_packages}" | wc -l)
+[ -n "${filter_packages}" ] && no_of_filter_packages=$(echo "${filter_packages}" | wc -l)
+
+for repo in $(jq --raw-output 'del(.pkg_format) | keys | .[]' repo.json); do
+  REPOSITORY_NAME=$(jq --raw-output '.["'$repo'"].name' repo.json)
+  REPOSITORY_DISTRIBUTION=$(jq --raw-output '.["'$repo'"].distribution' repo.json)
+  REPOSITORY_COMPONENT=$(jq --raw-output '.["'$repo'"].component' repo.json)
+  REPOSITORY_URL=$(jq --raw-output '.["'$repo'"].url' repo.json)
+  [ -f $REPOSITORY_NAME.pkglist ] || \
+    curl -L "$REPOSITORY_URL/dists/$REPOSITORY_DISTRIBUTION/$REPOSITORY_COMPONENT/binary-aarch64/Packages" \
+      -o $REPOSITORY_NAME.pkglist >/dev/null || exit 1
+done
+
+for i in `seq 100`; do
+  random_package_no=$(shuf -i 1-"${no_of_filter_packages}" -n 1)
+  random_package=$(echo "${filter_packages}" | head -n"${random_package_no}" | tail -n1)
+  random_package=$(basename ${random_package})
+  if grep "^Package: ${random_package}$" *.pkglist >/dev/null; then
+    continue
+  fi
+  echo "${random_package}"
+  break
+done
