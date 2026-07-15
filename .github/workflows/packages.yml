@@ -30,6 +30,7 @@ on:
         type: boolean
         default: false
   workflow_call:
+    secrets: inherit
     inputs:
       packages:
         description: "A space-separated names of packages selected for rebuilding"
