@@ -664,6 +664,10 @@ if [[ "${TERMUX_INSTALL_DEPS-false}" == "true" || "${TERMUX_PACKAGE_LIBRARY-bion
 		gpg --import "$TERMUX_SCRIPTDIR/packages/termux-keyring/termux-pacman.gpg"
 		gpg --no-tty --command-file <(echo -e "trust\n5\ny") --edit-key 998DE27318E867EA976BA877389CEED64573DFCA
 	}
+	gpg --list-keys 685F03D7BF53B22195B07E78EB93FD3B5D790355 > /dev/null 2>&1 || {
+		gpg --import "$TERMUX_SCRIPTDIR/packages/termux-keyring/pelya.gpg"
+		gpg --no-tty --command-file <(echo -e "trust\n5\ny") --edit-key 685F03D7BF53B22195B07E78EB93FD3B5D790355
+	}
 fi
 
 for (( i=0; i < ${#PACKAGE_LIST[@]}; i++ )); do

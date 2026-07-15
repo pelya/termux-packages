@@ -297,7 +297,6 @@ jobs:
           DEPENDENCIES=""
           if ${{ github.event.inputs.download-dependencies }}; then
             DEPENDENCIES="-I"
-            ./scripts/run-docker.sh gpg --import packages/termux-keyring/pelya.gpg
           fi
           ./scripts/run-docker.sh -d ./build-package.sh $DEPENDENCIES -C -a "${{ matrix.target_arch }}" "${packages[@]}"
         fi
@@ -316,15 +315,12 @@ jobs:
           test -f ./built_${repo}_subpackages.txt && cat ./built_${repo}_subpackages.txt >> ./debs/built_${repo}_packages.txt \
             && rm ./built_${repo}_subpackages.txt
           test -f ./deleted_${repo}_packages.txt && mv ./deleted_${repo}_packages.txt ./debs/
-           
 
           # Move only debs from built_packages into debs/ folder before
           # creating an archive.
           if [ -d "output" ]; then
-            
             # Match both $pkg.deb and $pkg-static.deb.
             find output -name '*.deb' -type f -print0 | xargs -0r mv -t debs/
-            
           fi
         done
 
@@ -522,14 +518,11 @@ jobs:
           mkdir -p tmp-debs
           find ${REPOSITORY_NAME} -name '*.deb' | xargs mv -t tmp-debs || true
           termux-apt-repo/termux-apt-repo --sign --use-hard-links tmp-debs ${REPOSITORY_NAME} ${REPOSITORY_DISTRIBUTION} ${REPOSITORY_COMPONENT} || exit 1
-          
 
           cd ${REPOSITORY_NAME} || exit 1
-          
           gpg --detach-sign --armor --yes --pinentry-mode loopback \
             -o dists/${REPOSITORY_DISTRIBUTION}/Release.gpg \
             dists/${REPOSITORY_DISTRIBUTION}/Release
-          
           git config --local user.email "buildbot@termux.dev"
           git config --local user.name "Termux build bot"
           git add dists
@@ -540,7 +533,6 @@ jobs:
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/Contents-* \
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages \
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages.xz || true
-          
           if git commit -m 'Packages' -a; then
             git push || exit 1
           fi
