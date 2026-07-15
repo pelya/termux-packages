@@ -305,7 +305,7 @@ jobs:
           if [ "${{ github.event.inputs.rebuild-dependencies }}" = true ]; then
             DEPENDENCIES=""
           fi
-          ./scripts/run-docker.sh -d ./build-package.sh -Q $DEPENDENCIES -C -a "${{ matrix.target_arch }}" "${packages[@]}"
+          ./scripts/run-docker.sh -d ./build-package.sh $DEPENDENCIES -C -a "${{ matrix.target_arch }}" "${packages[@]}"
         fi
 
     - name: Generate build artifacts
