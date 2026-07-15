@@ -306,6 +306,10 @@ jobs:
       run: |
         test -d termux-packages/output && mv termux-packages/output/* ./output/
         test -f output/downloads.txt && mv output/downloads.txt debs/
+        # Copy the list of built dependencies to upload to the server
+        # TODO: hardcoded repo names
+        test -f output/built_packages.txt && cat output/built_packages.txt >> ./built_termux-main_subpackages.txt
+        test -f output/built_x11-packages.txt && cat output/built_x11-packages.txt >> ./built_termux-x11_subpackages.txt
 
         for repo in $(jq --raw-output 'del(.pkg_format) | .[].name' repo.json); do
           # Put package lists into directory with *.deb files so they will be transferred to
