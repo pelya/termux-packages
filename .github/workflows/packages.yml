@@ -488,11 +488,9 @@ jobs:
         GH_TOKEN: ${{ secrets.DISTS_UPLOAD_TOKEN }}
         GITHUB_SHA: ${{ github.sha }}
       run: |
-        set -x
         for archive in debs-*/debs-{aarch64,arm,i686,x86_64}-${{ github.sha }}.tar; do
           tar xvf "$archive"
         done
-        gpg -K
 
         for repo in $(jq --raw-output 'del(.pkg_format) | keys | .[]' repo.json); do
           export REPOSITORY_NAME=$(jq --raw-output '.["'$repo'"].name' repo.json)
