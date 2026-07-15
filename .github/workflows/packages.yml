@@ -306,7 +306,8 @@ jobs:
       if: always()
       run: |
         test -d termux-packages/output && mv termux-packages/output/* ./output/
-        test -f ./output/downloads.txt && mv ./output/downloads.txt ./debs/
+        test -f output/downloads.txt && mv output/downloads.txt debs/
+        find output
 
         for repo in $(jq --raw-output 'del(.pkg_format) | .[].name' repo.json); do
           # Put package lists into directory with *.deb files so they will be transferred to
