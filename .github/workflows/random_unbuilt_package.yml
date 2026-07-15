@@ -1,0 +1,32 @@
+name: Build random unbuilt package
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+
+permissions: {} # none
+
+jobs:
+  random-build:
+    permissions:
+      contents: read
+    if: github.repository == 'termux/termux-packages'
+    runs-on: ubuntu-slim
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get package name
+        id: GetName
+        run: |
+          PACKAGE_NAME="$(scripts/bin/random-package-not-in-repo)"
+          echo PACKAGE_NAME=$RANDOM_PACKAGE_NAME
+          echo "PACKAGE_NAME=$RANDOM_PACKAGE_NAME" >> $GITHUB_OUTPUT
+
+      - name: Build ${{ steps.GetName.outputs.PACKAGE_NAME }}
+        if: ${{ steps.GetName.outputs.PACKAGE_NAME != '' }}
+        uses: .github/workflows/packages.yml
+        with:
+          packages: ${{ steps.GetName.outputs.PACKAGE_NAME }}

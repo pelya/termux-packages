@@ -24,10 +24,15 @@ on:
         description: "Free space even if not building large package (useful when building a large number of packages)"
         type: boolean
         default: false
-      download-dependencies:
-        description: "Download already built packages as dependencies, uncheck if the packages repository is empty"
+      rebuild-dependencies:
+        description: "Rebuild already built dependencies, enable it if the packages repository is empty"
         type: boolean
-        default: true
+        default: false
+  workflow_call:
+    inputs:
+      packages:
+        description: "A space-separated names of packages selected for rebuilding"
+        required: true
 
 permissions: {} # none
 
@@ -294,9 +299,9 @@ jobs:
         echo "packages: ${packages[*]}"
 
         if [[ "${#packages[@]}" -gt 0 ]]; then
-          DEPENDENCIES=""
-          if [ "${{ github.event.inputs.download-dependencies }}" = true ]; then
-            DEPENDENCIES="-I"
+          DEPENDENCIES="-I"
+          if [ "${{ github.event.inputs.rebuild-dependencies }}" = true ]; then
+            DEPENDENCIES=""
           fi
           ./scripts/run-docker.sh -d ./build-package.sh -Q $DEPENDENCIES -C -a "${{ matrix.target_arch }}" "${packages[@]}"
         fi
