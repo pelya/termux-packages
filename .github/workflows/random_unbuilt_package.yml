@@ -28,6 +28,6 @@ jobs:
 
       - name: Build ${{ steps.GetName.outputs.PACKAGE_NAME }}
         if: ${{ steps.GetName.outputs.PACKAGE_NAME != '' }}
-        uses: .github/workflows/packages.yml
+        uses: /.github/workflows/packages.yml@master
         with:
           packages: ${{ steps.GetName.outputs.PACKAGE_NAME }}
