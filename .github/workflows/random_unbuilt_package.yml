@@ -1,4 +1,4 @@
-name: Build random unbuilt package
+name: Build random package
 
 on:
   workflow_dispatch:
@@ -23,7 +23,7 @@ jobs:
         with:
           fetch-depth: 1
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Get package name
+      - name: Random name
         id: GetName
         run: |
           # Build several packages with one job so we will clone termux-packages-main repo less frequently
