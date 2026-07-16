@@ -58,10 +58,10 @@ read_package_list_deb() {
 	local architecture
 	for architecture in all "$1"; do
 		if [ ! -e "${BOOTSTRAP_TMPDIR}/packages.${architecture}" ]; then
-			echo "[*] Downloading package list for architecture '${architecture}' from ${REPO_BASE_URL}/dists/termux-main/main/binary-${architecture}/Packages"
+			echo "[*] Downloading package list for architecture '${architecture}' from ${REPO_BASE_URL}/dists/stable/main/binary-${architecture}/Packages"
 			if ! curl --fail --location \
 				--output "${BOOTSTRAP_TMPDIR}/packages.${architecture}" \
-				"${REPO_BASE_URL}/dists/termux-main/main/binary-${architecture}/Packages"; then
+				"${REPO_BASE_URL}/dists/stable/main/binary-${architecture}/Packages"; then
 				if [ "$architecture" = "all" ]; then
 					echo "[!] Skipping architecture-independent package list as not available..."
 					continue

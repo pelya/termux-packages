@@ -2,7 +2,7 @@
   "pkg_format": "debian",
   "packages": {
     "name": "termux-main",
-    "distribution": "termux-main",
+    "distribution": "stable",
     "component": "main",
     "url": "https://github.com/pelya/termux-packages-main/raw/refs/heads/2026-07-10"
   },

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-../termux-apt-repo/termux-apt-repo output apt termux-main main
+../termux-apt-repo/termux-apt-repo --sign output apt stable main
