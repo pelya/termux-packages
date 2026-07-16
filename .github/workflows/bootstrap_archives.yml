@@ -8,8 +8,8 @@ on:
 permissions: {} # none
 
 concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: true
+  group: .github/workflows/packages.yml
+  cancel-in-progress: false
 
 jobs:
   build:
