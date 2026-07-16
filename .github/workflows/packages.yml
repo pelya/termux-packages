@@ -112,7 +112,8 @@ jobs:
 
         OLD_COMMIT="$OLD_COMMIT" HEAD_COMMIT="$HEAD_COMMIT" GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" scripts/utils/termux_reuse_pr_build_artifacts.sh "${{ github.event_name }}" "${{ matrix.target_arch }}" || true
 
-        if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+        if [ "${{ github.event_name }}" != "workflow_dispatch" ] && \
+            [ "${{ github.event_name }}" != "schedule" ]; then
           # GitHub sometimes add merge commits at the end
           # To prevent user confusion, filter them with --no-merges
           # Process tag '%ci:no-build' that may be added as line to commit message.
@@ -207,7 +208,8 @@ jobs:
         echo "packages: ${packages[*]}"
 
         free_space='false'
-        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ] || \
+            [ "${{ github.event_name }}" == "schedule" ]; then
           free_space=${{ github.event.inputs.free-space }}
         else
           if grep -qiP '^\s*%ci:free-disk\s*$' <(git log --format="%B" -n 1 --no-merges "HEAD"); then
@@ -225,7 +227,8 @@ jobs:
         echo "free-space=$free_space" >> $GITHUB_OUTPUT
 
         needs_docker_build=false
-        if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+        if [ "${{ github.event_name }}" != "workflow_dispatch" ] && \
+            [ "${{ github.event_name }}" != "schedule" ]; then
           # Build local Docker image if setup scripts were changed.
           # Useful for pull requests submitting changes for both build environment and packages.
           if grep -qP '^scripts/(Dockerfile|properties\.sh|setup-android-sdk\.sh|setup-ubuntu\.sh)$' <<< "$CHANGED_FILES"; then
@@ -408,7 +411,8 @@ jobs:
         path: ./
     - name: Check packages using Packages.bz2
       run: |
-        if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+        if [ "${{ github.event_name }}" != "workflow_dispatch" ] && \
+            [ "${{ github.event_name }}" != "schedule" ]; then
           # GitHub sometimes add merge commits at the end
           # To prevent user confusion, filter them with --no-merges
           # Process tag '%ci:no-build' that may be added as line to commit message.
