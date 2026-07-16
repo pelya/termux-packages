@@ -1,9 +1,11 @@
 name: Build random unbuilt package
 
 on:
-  schedule:
-    - cron: "17-59/30 * * * *" # Run once per hour
   workflow_dispatch:
+  # Github schedule job is very unreliable, for me the cronjob was launched three times in one day.
+  # So this job is now launched from my own PC with `gh workflow run` command.
+  #schedule:
+  #  - cron: "17,47 * * * *" # Run twice per hour at odd time
 
 permissions: {} # none
 
