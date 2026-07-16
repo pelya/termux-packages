@@ -59,7 +59,7 @@ jobs:
           else
             tag_rev=1
           fi
-          new_tag="${new_tag}-r${tag_rev}+apt.android-7"
+          new_tag="${new_tag}-pelya${tag_rev}+apt.android-7"
           echo "tag_name=$new_tag" >> $GITHUB_OUTPUT
       - name: Publish bootstrap zips to GitHub release
         env:
