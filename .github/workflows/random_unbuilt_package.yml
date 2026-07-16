@@ -12,7 +12,7 @@ permissions: {} # none
 jobs:
   RandomName:
     permissions:
-      contents: write
+      contents: read
     if: github.repository == 'pelya/termux-packages'
     runs-on: ubuntu-slim
     outputs:
@@ -29,12 +29,6 @@ jobs:
           PACKAGE_NAME="$(for i in 1 2 3; do scripts/bin/random-package-not-in-repo; done | xargs echo)"
           echo "PACKAGE_NAME=$PACKAGE_NAME"
           echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_OUTPUT
-          # Generate a commit to keep Github from marking the repository as inactive
-          date -Iseconds > .ci-timestamp
-          git config --local user.email "buildbot@termux.dev"
-          git config --local user.name "Termux build bot"
-          git commit -m 'CI timestamp' .ci-timestamp
-          git push
 
   Build:
     permissions:
