@@ -78,6 +78,7 @@ jobs:
         # https://docs.github.com/en/webhooks/webhook-events-and-payloads#push
         OLD_COMMIT="${{ github.event.before }}"
         HEAD_COMMIT="${{ github.event.after }}"
+        echo "event_name=${{ github.event_name }}"
         if [ "${{ github.event_name }}" != "workflow_dispatch" ] && \
             [ "${{ github.event_name }}" != "schedule" ]; then
           BASE_REF="${{ github.event.pull_request.base.ref }}"
