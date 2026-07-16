@@ -507,7 +507,7 @@ jobs:
         GITHUB_SHA: ${{ github.sha }}
       run: |
         for archive in debs-*/debs-{aarch64,arm,i686,x86_64}-${{ github.sha }}.tar; do
-          tar xvf "$archive"
+          tar xf "$archive"
         done
 
         for repo in $(jq --raw-output 'del(.pkg_format) | keys | .[]' repo.json); do
@@ -522,12 +522,15 @@ jobs:
           mkdir -p tmp-debs
 
           if [ -f debs/built_${REPOSITORY_NAME}_packages.txt ]; then
-            for filename in $(cat debs/built_${REPOSITORY_NAME}_packages.txt | sed -E 's/(..*)/debs\/\1_\*.deb debs\/\1-static_\*.deb/g'); do
+            for filename in $(cat debs/built_${REPOSITORY_NAME}_packages.txt | sed -E 's/(..*)/debs\/\1_\*.deb debs\/\1-static_\*.deb/g' | sort -u); do
               PACKAGE_NAME="$(echo "$filename" | sed -E 's/^debs[/]([^_]+).*/\1/' )"
               PACKAGE_ARCH="$(echo "$filename" | sed -E 's/.*_(aarch64|all|arm|i686|x86_64).deb$/\1/' )"
               # Remove all other versions of the package
               rm -f ${REPOSITORY_NAME}/dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-${PACKAGE_ARCH}/${PACKAGE_NAME}_*_${PACKAGE_ARCH}.deb
-              mv -f "$filename" tmp-debs/ || true
+              if [ "$PACKAGE_ARCH" = "all" ]; then
+                  rm -f ${REPOSITORY_NAME}/dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-{aarch64,arm,i686,x86_64}/${PACKAGE_NAME}_*_${PACKAGE_ARCH}.deb
+              fi
+              mv "$filename" tmp-debs/ || true
               uploaded_files=true
             done
             shopt -u nullglob
