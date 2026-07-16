@@ -518,6 +518,8 @@ jobs:
           # Upload file to temporary directory.
           uploaded_files=false
           shopt -s nullglob
+          rm -rf tmp-debs
+          mkdir -p tmp-debs
 
           if [ -f debs/built_${REPOSITORY_NAME}_packages.txt ]; then
             for filename in $(cat debs/built_${REPOSITORY_NAME}_packages.txt | sed -E 's/(..*)/debs\/\1_\*.deb debs\/\1-static_\*.deb/g'); do
@@ -525,7 +527,7 @@ jobs:
               PACKAGE_ARCH="$(echo "$filename" | sed -E 's/.*_(aarch64|all|arm|i686|x86_64).deb$/\1/' )"
               # Remove all other versions of the package
               rm -f ${REPOSITORY_NAME}/dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-${PACKAGE_ARCH}/${PACKAGE_NAME}_*_${PACKAGE_ARCH}.deb
-              mv -f "$filename" ${REPOSITORY_NAME}/ || true
+              mv -f "$filename" tmp-debs/ || true
               uploaded_files=true
             done
             shopt -u nullglob
@@ -534,10 +536,8 @@ jobs:
           $uploaded_files || continue
 
           # Publishing repository changes.
-          rm -rf tmp-debs
-          mkdir -p tmp-debs
-          find ${REPOSITORY_NAME} -name '*.deb' | xargs mv -t tmp-debs || true
-          termux-apt-repo/termux-apt-repo --sign --use-hard-links tmp-debs ${REPOSITORY_NAME} ${REPOSITORY_DISTRIBUTION} ${REPOSITORY_COMPONENT} || exit 1
+          termux-apt-repo/termux-apt-repo --sign --use-hard-links --add-existing-repo \
+            tmp-debs ${REPOSITORY_NAME} ${REPOSITORY_DISTRIBUTION} ${REPOSITORY_COMPONENT} || exit 1
 
           cd ${REPOSITORY_NAME} || exit 1
           git config --local user.email "buildbot@termux.dev"
