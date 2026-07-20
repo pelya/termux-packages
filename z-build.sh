@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PKGS='
-libxrender libxtst libxv
+xrdp
 '
 
 export PATH=/sbin:$PATH # Add path to apparmor tools on Debian 13
