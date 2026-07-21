@@ -23,13 +23,15 @@ for repo in $(jq --raw-output 'del(.pkg_format) | keys | .[]' repo.json); do
       -o $REPOSITORY_NAME.pkglist >/dev/null || exit 1
 done
 
-for i in `seq 100`; do
-  random_package_no=$(shuf -i 1-"${no_of_total_packages}" -n 1)
-  random_package=$(echo "${total_packages}" | head -n"${random_package_no}" | tail -n1)
-  random_package=$(basename ${random_package})
-  if grep "^Package: ${random_package}$" *.pkglist >/dev/null; then
+no_of_built_packages=0
+
+for pkg in ${total_packages}; do
+  pkg=$(basename ${pkg})
+  if grep "^Package: ${pkg}$" *.pkglist >/dev/null; then
+    no_of_built_packages=$(expr ${no_of_built_packages} + 1)
     continue
   fi
-  echo "${random_package}"
-  break
+  echo "${pkg}"
 done
+
+echo "Built ${no_of_built_packages} packages out of ${no_of_total_packages}"
