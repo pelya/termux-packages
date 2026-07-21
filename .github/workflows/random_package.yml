@@ -1,0 +1,46 @@
+name: Build random package
+
+on:
+  workflow_dispatch:
+  # Github schedule job is very unreliable, for me the cronjob was launched three times in one day.
+  # So this job is now launched from my own PC with `gh workflow run` command.
+  #schedule:
+  #  - cron: "17,47 * * * *" # Run twice per hour at odd time
+
+permissions: {} # none
+
+jobs:
+  RandomName:
+    permissions:
+      contents: read
+    if: github.repository == 'pelya/termux-packages'
+    runs-on: ubuntu-slim
+    outputs:
+      PACKAGE_NAME: ${{ steps.GetName.outputs.PACKAGE_NAME }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Random name
+        id: GetName
+        run: |
+          # Build several packages with one job so we will clone termux-packages-main repo less frequently
+          # Five packages is too many because the build job fails more often
+          PACKAGE_NAME="$(for i in 1; do scripts/bin/random-package-not-in-archive; done | xargs echo)"
+          echo "PACKAGE_NAME=$PACKAGE_NAME"
+          echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+
+  Build:
+    permissions:
+      contents: read
+    needs: RandomName
+    name: Build ${{ needs.RandomName.outputs.PACKAGE_NAME }}
+    if: ${{ needs.RandomName.outputs.PACKAGE_NAME != '' }} && github.repository == 'pelya/termux-packages'
+    uses: pelya/termux-packages/.github/workflows/packages.yml@master
+    with:
+      packages: ${{ needs.RandomName.outputs.PACKAGE_NAME }}
+    secrets:
+      GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
+      DISTS_UPLOAD_TOKEN: ${{ secrets.DISTS_UPLOAD_TOKEN }}
