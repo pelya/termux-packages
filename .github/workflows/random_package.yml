@@ -13,7 +13,7 @@ jobs:
   RandomName:
     permissions:
       contents: read
-    if: github.repository == 'pelya/termux-packages'
+    if: ${{ github.repository == 'pelya/termux-packages' }}
     runs-on: ubuntu-slim
     outputs:
       PACKAGE_NAME: ${{ steps.GetName.outputs.PACKAGE_NAME }}
