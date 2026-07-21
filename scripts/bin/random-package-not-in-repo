@@ -17,6 +17,7 @@ for repo in $(jq --raw-output 'del(.pkg_format) | keys | .[]' repo.json); do
   REPOSITORY_DISTRIBUTION=$(jq --raw-output '.["'$repo'"].distribution' repo.json)
   REPOSITORY_COMPONENT=$(jq --raw-output '.["'$repo'"].component' repo.json)
   REPOSITORY_URL=$(jq --raw-output '.["'$repo'"].url' repo.json)
+  # aarch64 is the primary architecture - there are no packages which have aarch64 in TERMUX_PKG_EXCLUDED_ARCHES
   [ -f $REPOSITORY_NAME.pkglist ] || \
     curl -L "$REPOSITORY_URL/dists/$REPOSITORY_DISTRIBUTION/$REPOSITORY_COMPONENT/binary-aarch64/Packages" \
       -o $REPOSITORY_NAME.pkglist >/dev/null || exit 1
