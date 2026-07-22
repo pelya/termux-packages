@@ -65,9 +65,11 @@ def parse_build_file_dependencies(path):
     "Extract the dependencies of a build.sh or *.subpackage.sh file."
     deps = parse_build_file_dependencies_with_vars(path, ('TERMUX_PKG_DEPENDS', 'TERMUX_PKG_BUILD_DEPENDS', 'TERMUX_SUBPKG_DEPENDS', 'TERMUX_PKG_DEVPACKAGE_DEPENDS'))
     # Hack to build X11 apps - libtool requires libx11.la for some reason, which is only present in libx11-static
-    for lib in ['x11', 'xcb', 'xdmcp', 'xext', 'xfixes', 'xft', 'xi', 'xt', 'xrandr', 'xtst', 'xfont2', 'xinerama']:
+    for lib in ['x11', 'xcb', 'xdmcp', 'xext', 'xfixes', 'xft', 'xi', 'xt', 'xrandr', 'xtst', 'xfont2', 'xinerama', 'xfconf']:
         if f'lib{lib}' in deps and f'lib{lib}-static' not in deps:
             deps.add(f'lib{lib}-static')
+        if f'{lib}' in deps and f'{lib}-static' not in deps:
+            deps.add(f'{lib}-static')
     return deps
 
 def parse_build_file_antidependencies(path):
