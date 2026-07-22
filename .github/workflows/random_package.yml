@@ -37,7 +37,7 @@ jobs:
       contents: read
     needs: RandomName
     name: Build ${{ needs.RandomName.outputs.PACKAGE_NAME }}
-    if: ${{ needs.RandomName.outputs.PACKAGE_NAME != '' }} && ${{ github.repository == 'pelya/termux-packages' }}
+    if: ${{ needs.RandomName.outputs.PACKAGE_NAME != '' && github.repository == 'pelya/termux-packages' }}
     uses: pelya/termux-packages/.github/workflows/packages.yml@master
     with:
       packages: ${{ needs.RandomName.outputs.PACKAGE_NAME }}
