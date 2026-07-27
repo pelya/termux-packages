@@ -116,10 +116,22 @@ termux_download_deb_pac() {
 		return 1
 	fi
 
-	termux_download "${TERMUX_REPO_URL[${idx}-1]}/${PKG_PATH}" \
+	if termux_download_source_mirror "${PACKAGE}" \
+				"${TERMUX_REPO_URL[${idx}-1]}/${PKG_PATH}" \
 				"${TERMUX_COMMON_CACHEDIR}-${PACKAGE_ARCH}/${PKG_FILE}" \
-				"$PKG_HASH"
-	echo "${PKG_FILE}" >> "${TERMUX_OUTPUT_DIR}/downloads.txt"
+				"$PKG_HASH"; then
+		return 0
+	elif termux_download "${TERMUX_REPO_URL[${idx}-1]}/${PKG_PATH}" \
+				"${TERMUX_COMMON_CACHEDIR}-${PACKAGE_ARCH}/${PKG_FILE}" \
+				"$PKG_HASH"; then
+		if [ "$TERMUX_COPY_TO_SOURCE_MIRROR" = "true" ]; then
+			mkdir -p "${TERMUX_OUTPUT_DIR}/source"
+			cp -f "${TERMUX_COMMON_CACHEDIR}-${PACKAGE_ARCH}/${PKG_FILE}" "${TERMUX_OUTPUT_DIR}/source/"
+		fi
+		return 0
+	else
+		return 1
+	fi
 }
 
 # Make script standalone executable as well as sourceable
