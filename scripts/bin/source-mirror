@@ -93,9 +93,11 @@ command_download() {
 command_upload() {
   echo "${count}/${no_of_total_packages}: package ${TERMUX_PKG_NAME}"
   # Check if the file is already uploaded first, upload if the local file is different
-  gh release verify-asset "${mirror_name}" "${DOWNLOAD_DIR}/${mirror_name}/${source_file}" \
-    || gh release upload --clobber "${mirror_name}" "${DOWNLOAD_DIR}/${mirror_name}/${source_file}" \
+  pushd "${DOWNLOAD_DIR}/${mirror_name}" >/dev/null
+  gh release verify-asset "${mirror_name}" "${source_file}" \
+    || gh release upload --clobber "${mirror_name}" "${source_file}" \
     || exit 1
+  popd >/dev/null
 }
 
 command_clean() {
@@ -129,9 +131,9 @@ for pkg in ${total_packages}; do
   for i in $(seq 0 $(( ${#PKG_SRCURL[@]}-1 ))); do
     sha256="${PKG_SHA256[$i]:-}"
     url="${PKG_SRCURL[$i]}"
-    source_file="${TERMUX_PKG_NAME}-$(basename ${url})"
+    source_file="${TERMUX_PKG_NAME}_$(basename ${url})"
     if [[ "${url}" =~ ^git[+]https://.* ]]; then
-      source_file="${TERMUX_PKG_NAME}-${TERMUX_PKG_GIT_BRANCH:-v${TERMUX_PKG_VERSION#*:}}.tar.xz"
+      source_file="${TERMUX_PKG_NAME}_${TERMUX_PKG_GIT_BRANCH:-v${TERMUX_PKG_VERSION#*:}}.tar.xz"
     fi
 
     if [ "$COMMAND" = "download" ]; then
