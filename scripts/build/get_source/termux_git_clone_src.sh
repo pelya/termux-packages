@@ -41,8 +41,8 @@ termux_git_clone_src() {
 		echo "Downloading git source $([[ "$termux_pkg_branch_flags" != "" ]] && echo "with branch '${termux_pkg_branch_flags:9}' ")from '$termux_pkg_srcurl'"
 		rm -rf "$TMP_CHECKOUT"
 
-		local git_archive="$(basename ${termux_pkg_srcurl})-${TERMUX_PKG_GIT_BRANCH:-v${TERMUX_PKG_VERSION#*:}}.tar.xz"
-		if termux_download_source_mirror "${TERMUX_PKG_NAME}" "$termux_pkg_srcurl" "$TERMUX_PKG_CACHEDIR/$git_archive"; then
+		local git_archive="$(basename ${termux_pkg_srcurl})_${TERMUX_PKG_GIT_BRANCH:-v${TERMUX_PKG_VERSION#*:}}.tar.xz"
+		if termux_download_source_mirror "${TERMUX_PKG_NAME}" "$git_archive" "$TERMUX_PKG_CACHEDIR/$git_archive"; then
 			mkdir -p "$TMP_CHECKOUT"
 			tar -x --xz -C "$TMP_CHECKOUT" -f "$TERMUX_PKG_CACHEDIR/$git_archive" || return 1
 		else

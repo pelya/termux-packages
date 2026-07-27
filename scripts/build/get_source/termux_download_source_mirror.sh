@@ -66,7 +66,7 @@ termux_download_source_mirror() {
 	local DESTINATION="$3"
 	local CHECKSUM="${4:-SKIP_CHECKSUM}"
 	local SOURCE_MIRROR_NAME="$(termux_get_source_mirror_name ${PKG})"
-	local SOURCE_MIRROR_URL="${SOURCE_MIRROR_BASE_URL}/${SOURCE_MIRROR_NAME}/${PKG}-$(basename ${PKG_URL})"
+	local SOURCE_MIRROR_URL="${SOURCE_MIRROR_BASE_URL}/${SOURCE_MIRROR_NAME}/${PKG}_$(basename ${PKG_URL})"
 
 	# Same as termux_download but without retries, and with partial download enabled
 	if [ -f "$DESTINATION" ] && [ "$CHECKSUM" != "SKIP_CHECKSUM" ]; then

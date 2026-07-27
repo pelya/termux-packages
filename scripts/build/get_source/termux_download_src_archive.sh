@@ -14,7 +14,7 @@ termux_download_src_archive() {
 			elif termux_download "${PKG_SRCURL[$i]}" "$file"; then
 				if [ "$TERMUX_COPY_TO_SOURCE_MIRROR" = "true" ]; then
 					mkdir -p "${TERMUX_OUTPUT_DIR}/source"
-					cp -f "$file" "${TERMUX_OUTPUT_DIR}/source/"
+					cp -f "$file" "${TERMUX_OUTPUT_DIR}/source/${TERMUX_PKG_NAME}_$(basename ${PKG_SRCURL[$i]})"
 				fi
 				return 0
 			else
@@ -27,7 +27,7 @@ termux_download_src_archive() {
 			elif termux_download "${PKG_SRCURL[$i]}" "$file" "${PKG_SHA256[$i]}"; then
 				if [ "$TERMUX_COPY_TO_SOURCE_MIRROR" = "true" ]; then
 					mkdir -p "${TERMUX_OUTPUT_DIR}/source"
-					cp -f "$file" "${TERMUX_OUTPUT_DIR}/source/${TERMUX_PKG_NAME}-$(basename ${PKG_SRCURL[$i]})"
+					cp -f "$file" "${TERMUX_OUTPUT_DIR}/source/${TERMUX_PKG_NAME}_$(basename ${PKG_SRCURL[$i]})"
 				fi
 				return 0
 			else
