@@ -42,7 +42,9 @@ termux_git_clone_src() {
 		rm -rf "$TMP_CHECKOUT"
 
 		local git_archive="$(basename ${termux_pkg_srcurl})_${TERMUX_PKG_GIT_BRANCH:-v${TERMUX_PKG_VERSION#*:}}.tar.xz"
-		if termux_download_source_mirror "${TERMUX_PKG_NAME}" "$git_archive" "$TERMUX_PKG_CACHEDIR/$git_archive"; then
+		if termux_download_source_mirror "${TERMUX_PKG_NAME}" \
+				"${TERMUX_PKG_GIT_BRANCH:-v${TERMUX_PKG_VERSION#*:}}.tar.xz" \
+				"$TERMUX_PKG_CACHEDIR/$git_archive"; then
 			mkdir -p "$TMP_CHECKOUT"
 			tar -x --xz -C "$TMP_CHECKOUT" -f "$TERMUX_PKG_CACHEDIR/$git_archive" || return 1
 		else
@@ -75,16 +77,17 @@ termux_git_clone_src() {
 			fi
 
 			popd
-		fi
-		echo "$TERMUX_PKG_VERSION" > "$TMP_CHECKOUT_VERSION"
-		if [ "$TERMUX_COPY_TO_SOURCE_MIRROR" = "true" ]; then
-			if [ "${TERMUX_PKG_NAME}" = "aapt" ]; then
-				echo "aapt git archive is bigger than 2 gigabytes and cannot be uploaded to Github source mirror"
-			else
-				mkdir -p "$TERMUX_OUTPUT_DIR/source"
-				tar -c -C "$TMP_CHECKOUT" . | xz -T0 > "${TERMUX_OUTPUT_DIR}/source/$git_archive" || exit 1
+
+			if [ "$TERMUX_COPY_TO_SOURCE_MIRROR" = "true" ]; then
+				if [ "${TERMUX_PKG_NAME}" = "aapt" ]; then
+					echo "aapt git archive is bigger than 2 gigabytes and cannot be uploaded to Github source mirror"
+				else
+					mkdir -p "$TERMUX_OUTPUT_DIR/source"
+					tar -c -C "$TMP_CHECKOUT" . | xz -T0 > "${TERMUX_OUTPUT_DIR}/source/$git_archive" || exit 1
+				fi
 			fi
 		fi
+		echo "$TERMUX_PKG_VERSION" > "$TMP_CHECKOUT_VERSION"
 	else
 		echo "Skipped downloading of git source from '$termux_pkg_srcurl'"
 	fi
