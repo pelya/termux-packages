@@ -496,6 +496,10 @@ jobs:
         ref: 2026-07-10
         token: ${{ secrets.DISTS_UPLOAD_TOKEN }}
         path: termux-main
+        sparse-checkout: |
+          '/*'
+          '!*.deb'
+        sparse-checkout-cone-mode: false
     - name: Checkout X11 compiled packages repo
       uses: actions/checkout@v7
       with:
@@ -560,6 +564,8 @@ jobs:
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/Contents-* \
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages \
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages.xz || true
+          
+          git add -f dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/*.deb || true
           if git commit -m 'Packages' -a; then
             git push || exit 1
           fi
