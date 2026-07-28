@@ -496,6 +496,7 @@ jobs:
         ref: 2026-07-10
         token: ${{ secrets.DISTS_UPLOAD_TOKEN }}
         path: termux-main
+        fetch-depth: 0
     - name: Checkout X11 compiled packages repo
       uses: actions/checkout@v7
       with:
@@ -503,6 +504,7 @@ jobs:
         ref: 2026-07-10
         token: ${{ secrets.DISTS_UPLOAD_TOKEN }}
         path: termux-x11
+        fetch-depth: 0
     # There is no root repo, because root does not work inside greater.underscore app
     - name: Import GPG key
       uses: crazy-max/ghaction-import-gpg@v7
