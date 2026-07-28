@@ -58,7 +58,7 @@ command_download() {
     mkdir -p "${TERMUX_PKG_TMPDIR}/${TERMUX_PKG_NAME}"
     git clone \
         --depth 1 \
-        --branch "${TERMUX_PKG_GIT_BRANCH}" \
+        --branch "${TERMUX_PKG_GIT_BRANCH:-v${TERMUX_PKG_VERSION#*:}}" \
         "${url:4}" \
         "${TERMUX_PKG_TMPDIR}/${TERMUX_PKG_NAME}/src" \
       && git \
@@ -71,7 +71,7 @@ command_download() {
       && mv -f "${TERMUX_PKG_TMPDIR}/${source_file}" \
         "${DOWNLOAD_DIR}/${mirror_name}/${source_file}" \
       && rm -rf "${TERMUX_PKG_TMPDIR}/${TERMUX_PKG_NAME}" \
-      || echo "${source_file} git clone --depth=1 --branch ${TERMUX_PKG_GIT_BRANCH} ${url:4} src && git -C src submodule update --init --recursive --depth=1 && tar -c --xz -C src -f ${source_file} ." \
+      || echo "${source_file} git clone --depth=1 --branch ${TERMUX_PKG_GIT_BRANCH:-v${TERMUX_PKG_VERSION#*:}} ${url:4} src && git -C src submodule update --init --recursive --depth=1 && tar -c --xz -C src -f ${source_file} ." \
         >> "${DOWNLOAD_DIR}/download-failed.txt" &
   elif [ -n "${url}" ]; then
     echo "${count}/${no_of_total_packages}: Downloading ${url}"
