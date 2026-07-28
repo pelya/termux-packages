@@ -40,7 +40,7 @@ mkdir -p ${DOWNLOAD_DIR}
 if [ "$COMMAND" = "download" ]; then
   rm -f ${DOWNLOAD_DIR}/download-failed.txt
 elif [ "$COMMAND" = "upload" ] || [ "$COMMAND" = "clean" ]; then
-  rm -f ${DOWNLOAD_DIR}/list-*.txt
+  rm -f ${DOWNLOAD_DIR}/list-*.txt ${DOWNLOAD_DIR}/list-*.sha256 ${DOWNLOAD_DIR}/upload-failed.txt
 fi
 
 total_packages=$(find packages x11-packages root-packages -mindepth 1 -maxdepth 1 -type d | sort)
@@ -92,19 +92,39 @@ command_download() {
 
 command_upload() {
   if [ ! -f "${DOWNLOAD_DIR}/${mirror_name}/${source_file}" ]; then
-    echo "${count}/${no_of_total_packages}: ${source_file} is not downloaded, skipping"
-    return 0
+    echo "${source_file} is not downloaded, skipping" | tee -a "${DOWNLOAD_DIR}/upload-failed.txt"
+    return
   fi
+
   echo "${count}/${no_of_total_packages}: ${source_file}"
   if [ ! -e "${DOWNLOAD_DIR}/list-${mirror_name}.txt" ]; then
     gh release view --json assets --jq '.assets[].name' ${mirror_name} > "${DOWNLOAD_DIR}/list-${mirror_name}.txt" || exit 1
     gh release view --json assets ${mirror_name} | jq -r '.assets[] | "\(.digest)  \(.name)"' \
       | sed 's/^sha256://g' > "${DOWNLOAD_DIR}/list-${mirror_name}.sha256" || exit 1
   fi
+
   # TODO: check uploaded file checksum and re-upload if it does not match
+  ACTUAL_CHECKSUM=$(sha256sum "${DOWNLOAD_DIR}/${mirror_name}/${source_file}" | cut -d' ' -f1)
+  UPLOAD_CHECKSUM=$(grep -F " ${source_file}" "${DOWNLOAD_DIR}/list-${mirror_name}.sha256" | cut -d' ' -f1)
+  if [ "$sha256" = "SKIP_CHECKSUM" ] || [[ "${url}" =~ ^git[+]https://.* ]]; then
+    echo "Checksum check skipped"
+    if [ -n "$UPLOAD_CHECKSUM" ]; then
+      echo "File is already uploaded, skipping"
+      return
+    fi
+  elif [ "$sha256" != "$ACTUAL_CHECKSUM" ]; then
+    echo "${source_file} checksum is wrong for the local file, skipping" | tee -a "${DOWNLOAD_DIR}/upload-failed.txt"
+    return
+  elif [ "$sha256" = "$UPLOAD_CHECKSUM" ]; then
+    echo "File is already uploaded and the checksum matches, skipping"
+    return
+  elif [ -n "$UPLOAD_CHECKSUM" ]; then
+    echo "${source_file} uploaded file checksum is wrong, uploading the file again"
+  fi
+
   pushd "${DOWNLOAD_DIR}/${mirror_name}" >/dev/null
-  grep -Fx "${source_file}" "${DOWNLOAD_DIR}/list-${mirror_name}.txt" \
-    || gh release upload --clobber "${mirror_name}" "${source_file}"
+  gh release upload --clobber "${mirror_name}" "${source_file}" \
+    || echo "${source_file} upload failed" | tee -a "${DOWNLOAD_DIR}/upload-failed.txt"
   popd >/dev/null
 }
 
@@ -144,7 +164,7 @@ for pkg in ${total_packages}; do
   PKG_SHA256=(${TERMUX_PKG_SHA256[@]})
 
   for i in $(seq 0 $(( ${#PKG_SRCURL[@]}-1 ))); do
-    sha256="${PKG_SHA256[$i]:-}"
+    sha256="${PKG_SHA256[$i]:-SKIP_CHECKSUM}"
     url="${PKG_SRCURL[$i]}"
     source_file="${TERMUX_PKG_NAME}_$(basename ${url})"
     if [[ "${url}" =~ ^git[+]https://.* ]]; then
@@ -174,7 +194,12 @@ if [ "$COMMAND" = "download" ]; then
   echo "====="
 elif [ "$COMMAND" = "upload" ]; then
   echo "====="
+  echo "Upload failed for following packages:"
+  echo "====="
+  cat "${DOWNLOAD_DIR}/upload-failed.txt"
+  echo "====="
   echo "Uploading finished"
+  echo "====="
 elif [ "$COMMAND" = "clean" ]; then
   for list_file in ${DOWNLOAD_DIR}/list-*.txt; do
     mirror_name="$(basename ${list_file} | sed -E 's/list-(.*)[.]txt/\1/')"
