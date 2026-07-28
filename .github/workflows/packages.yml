@@ -561,7 +561,7 @@ jobs:
           set -x
           git config --local user.email "buildbot@termux.dev"
           git config --local user.name "Termux build bot"
-          git add dists
+          git add -f --sparse dists
           git commit -m 'Metadata' \
             dists/${REPOSITORY_DISTRIBUTION}/Release \
             dists/${REPOSITORY_DISTRIBUTION}/Release.gpg \
@@ -570,7 +570,7 @@ jobs:
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages \
             dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages.xz || true
           
-          git add -f --sparse dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/*.deb || true
+          # git add -f --sparse dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/*.deb || true
           if git commit -m 'Packages' -a; then
             git push || exit 1
           fi
