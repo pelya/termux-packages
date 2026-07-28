@@ -78,8 +78,12 @@ termux_git_clone_src() {
 		fi
 		echo "$TERMUX_PKG_VERSION" > "$TMP_CHECKOUT_VERSION"
 		if [ "$TERMUX_COPY_TO_SOURCE_MIRROR" = "true" ]; then
-			mkdir -p "$TERMUX_OUTPUT_DIR/source"
-			tar -c -C "$TMP_CHECKOUT" . | xz -T0 > "${TERMUX_OUTPUT_DIR}/source/$git_archive" || exit 1
+			if [ "${TERMUX_PKG_NAME}" = "aapt" ]; then
+				echo "aapt git archive is bigger than 2 gigabytes and cannot be uploaded to Github source mirror"
+			else
+				mkdir -p "$TERMUX_OUTPUT_DIR/source"
+				tar -c -C "$TMP_CHECKOUT" . | xz -T0 > "${TERMUX_OUTPUT_DIR}/source/$git_archive" || exit 1
+			fi
 		fi
 	else
 		echo "Skipped downloading of git source from '$termux_pkg_srcurl'"

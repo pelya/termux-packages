@@ -98,6 +98,8 @@ command_upload() {
   echo "${count}/${no_of_total_packages}: ${source_file}"
   if [ ! -e "${DOWNLOAD_DIR}/list-${mirror_name}.txt" ]; then
     gh release view --json assets --jq '.assets[].name' ${mirror_name} > "${DOWNLOAD_DIR}/list-${mirror_name}.txt" || exit 1
+    gh release view --json assets ${mirror_name} | jq -r '.assets[] | "\(.digest)  \(.name)"' \
+      | sed 's/^sha256://g' > "${DOWNLOAD_DIR}/list-${mirror_name}.sha256" || exit 1
   fi
   # TODO: check uploaded file checksum and re-upload if it does not match
   pushd "${DOWNLOAD_DIR}/${mirror_name}" >/dev/null
@@ -131,6 +133,13 @@ for pkg in ${total_packages}; do
 
   TERMUX_PKG_NAME="$(basename ${pkg})"
   mirror_name="$(termux_get_source_mirror_name ${TERMUX_PKG_NAME})"
+
+  if [ "${TERMUX_PKG_NAME}" = "aapt" ]; then
+    echo "aapt git archive is bigger than 2 gigabytes and cannot be uploaded to Github source mirror"
+    continue
+  fi
+
+  # TERMUX_PKG_SRCURL is actually an archive, loop through it
   PKG_SRCURL=(${TERMUX_PKG_SRCURL[@]})
   PKG_SHA256=(${TERMUX_PKG_SHA256[@]})
 
