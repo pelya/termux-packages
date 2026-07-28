@@ -572,6 +572,7 @@ jobs:
           cd "source"
           for source_file in *; do
             mirror_name="$(../scripts/build/get_source/termux_download_source_mirror.sh --mirror-name ${source_file})"
+            echo "Uploading ${source_file} to ${mirror_name}"
             gh release upload --clobber "${mirror_name}" "${source_file}"
           done
           cd ..
