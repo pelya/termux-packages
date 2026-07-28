@@ -329,8 +329,6 @@ jobs:
           sed -E 's/^([^_]*)_.*$/\1/g' >> ./built_termux-main_subpackages.txt
         test -f output/built_x11-packages.txt && cat output/built_x11-packages.txt | \
           sed -E 's/^([^_]*)_.*$/\1/g' >> ./built_termux-x11_subpackages.txt
-        test -f output/built_root-packages.txt && cat output/built_root-packages.txt | \
-          sed -E 's/^([^_]*)_.*$/\1/g' >> ./built_termux-root_subpackages.txt
 
         for repo in $(jq --raw-output 'del(.pkg_format) | .[].name' repo.json); do
           # Put package lists into directory with *.deb files so they will be transferred to
@@ -515,11 +513,6 @@ jobs:
         GH_TOKEN: ${{ secrets.DISTS_UPLOAD_TOKEN }}
         GITHUB_SHA: ${{ github.sha }}
       run: |
-        set -x
-        ls -l .
-        ls -l output
-        ls -l output/source
-        set +x
         for archive in debs-*/debs-{aarch64,arm,i686,x86_64}-${{ github.sha }}.tar; do
           tar xf "$archive"
         done
@@ -573,3 +566,13 @@ jobs:
           cd ..
 
         done
+
+        # Upload source archives to source mirror
+        if [ -d "source" ]; then
+          cd "source"
+          for source_file in *; do
+            mirror_name="$(../scripts/build/get_source/termux_download_source_mirror.sh --mirror-name ${source_file})"
+            gh release upload --clobber "${mirror_name}" "${source_file}"
+          done
+          cd ..
+        fi
