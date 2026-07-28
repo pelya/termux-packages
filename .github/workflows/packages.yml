@@ -474,7 +474,7 @@ jobs:
     concurrency: ${{ github.workflow }}
     permissions:
       contents: read
-    if: github.ref == 'refs/heads/master' # github.repository == 'termux/termux-packages'
+    if: github.ref == 'refs/heads/master' # && github.repository == 'termux/termux-packages'
     needs: build
     runs-on: ubuntu-slim
     steps:
@@ -567,7 +567,10 @@ jobs:
 
         done
 
-        # Upload source archives to source mirror
+    - name: Upload source archives to source mirror
+      env:
+        GH_TOKEN: ${{ secrets.DISTS_UPLOAD_TOKEN }}
+      run: |
         if [ -d "source" ]; then
           cd "source"
           for source_file in *; do
