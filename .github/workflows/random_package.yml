@@ -51,7 +51,10 @@ jobs:
     runs-on: ubuntu-slim
     needs: [RandomName, Build]
     if: ${{ failure() }}
-    concurrency: LogFailure
+    concurrency:
+      group: LogFailure
+      cancel-in-progress: false
+      queue: max
     steps:
       - name: Clone repository
         uses: actions/checkout@v7
