@@ -46,10 +46,22 @@ jobs:
       packages: ${{ needs.RandomName.outputs.PACKAGE_NAME }}
 
   LogFailure:
+    permissions:
+      contents: write
     runs-on: ubuntu-slim
     needs: Build
-    #if: ${{ failure() }}
+    if: ${{ failure() }}
+    concurrency: LogFailure
     steps:
+      - name: Clone repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Write failure list
-        run: echo "=== Build failed for ${{ needs.RandomName.outputs.PACKAGE_NAME }}"
+        run: |
+          echo "=== Build failed for ${{ needs.RandomName.outputs.PACKAGE_NAME }}"
+          echo "${{ needs.RandomName.outputs.PACKAGE_NAME }}" | tr ' ' '\n' >> build-failed.txt
+          git add build-failed.txt
+          
 
