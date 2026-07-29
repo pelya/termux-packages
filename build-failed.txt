@@ -1,2 +1,4 @@
 libretls
 mutter
+rustscan
+gnucash
