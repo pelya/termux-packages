@@ -27,7 +27,11 @@ for i in `seq 100`; do
   random_package_no=$(shuf -i 1-"${no_of_total_packages}" -n 1)
   random_package=$(echo "${total_packages}" | head -n"${random_package_no}" | tail -n1)
   random_package=$(basename ${random_package})
-  if grep "^Package: ${random_package}$" *.pkglist >/dev/null; then
+  if grep -Fx "Package: ${random_package}" *.pkglist >/dev/null; then
+    continue
+  fi
+  if [ -f build-failed.txt ] \
+      && grep -Fx "${random_package}" build-failed.txt >/dev/null; then
     continue
   fi
   echo "${random_package}"
