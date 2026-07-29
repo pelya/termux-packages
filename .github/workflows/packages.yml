@@ -30,8 +30,8 @@ on:
         type: boolean
         default: false
   workflow_call:
-    secrets: 
-      DISTS_UPLOAD_TOKEN:
+    secrets:
+      TERMUXBOT2_TOKEN:
         required: true
       GPG_SECRET_KEY:
         required: true
@@ -494,7 +494,7 @@ jobs:
       with:
         repository: pelya/termux-packages-main
         ref: 2026-07-10
-        token: ${{ secrets.DISTS_UPLOAD_TOKEN }}
+        token: ${{ secrets.TERMUXBOT2_TOKEN }}
         path: termux-main
         sparse-checkout: |
           '/*'
@@ -505,7 +505,7 @@ jobs:
       with:
         repository: pelya/termux-packages-x11
         ref: 2026-07-10
-        token: ${{ secrets.DISTS_UPLOAD_TOKEN }}
+        token: ${{ secrets.TERMUXBOT2_TOKEN }}
         path: termux-x11
         sparse-checkout: |
           '/*'
@@ -518,7 +518,7 @@ jobs:
         gpg_private_key: ${{ secrets.GPG_SECRET_KEY }}
     - name: Upload to apt repos
       env:
-        GH_TOKEN: ${{ secrets.DISTS_UPLOAD_TOKEN }}
+        GH_TOKEN: ${{ secrets.TERMUXBOT2_TOKEN }}
         GITHUB_SHA: ${{ github.sha }}
       run: |
         for archive in debs-*/debs-{aarch64,arm,i686,x86_64}-${{ github.sha }}.tar; do
@@ -579,7 +579,7 @@ jobs:
         done
     - name: Upload source archives to source mirror
       env:
-        GH_TOKEN: ${{ secrets.DISTS_UPLOAD_TOKEN }}
+        GH_TOKEN: ${{ secrets.TERMUXBOT2_TOKEN }}
       run: |
         if [ -d "source" ]; then
           cd "source"

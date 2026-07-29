@@ -43,4 +43,4 @@ jobs:
       packages: ${{ needs.RandomName.outputs.PACKAGE_NAME }}
     secrets:
       GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
-      DISTS_UPLOAD_TOKEN: ${{ secrets.DISTS_UPLOAD_TOKEN }}
+      TERMUXBOT2_TOKEN: ${{ secrets.TERMUXBOT2_TOKEN }}
