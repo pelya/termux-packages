@@ -6,3 +6,5 @@ lzop
 kmenuedit
 hugin
 kf6-kuserfeedback
+b3sum
+ark
