@@ -2,3 +2,5 @@ libretls
 mutter
 rustscan
 gnucash
+lzop
+kmenuedit
