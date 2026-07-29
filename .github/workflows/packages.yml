@@ -26,7 +26,7 @@ on:
         type: boolean
         default: false
       rebuild-dependencies:
-        description: "Rebuild already built dependencies, enable it if the packages repository is empty"
+        description: "Rebuild already built dependencies, enable this if the apt repository is empty"
         type: boolean
         default: false
   workflow_call:
