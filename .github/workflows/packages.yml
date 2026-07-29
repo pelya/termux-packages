@@ -552,6 +552,9 @@ jobs:
           fi
 
           $uploaded_files || continue
+          # TODO: debug, remove
+          ls -l dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-aarch64/Packages
+          cat dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-aarch64/Packages
 
           # Publishing repository changes.
           termux-apt-repo/termux-apt-repo --sign --use-hard-links --add-existing-repo \
@@ -574,7 +577,6 @@ jobs:
           cd ..
 
         done
-
     - name: Upload source archives to source mirror
       env:
         GH_TOKEN: ${{ secrets.DISTS_UPLOAD_TOKEN }}
