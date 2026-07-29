@@ -497,8 +497,8 @@ jobs:
         token: ${{ secrets.TERMUXBOT2_TOKEN }}
         path: termux-main
         sparse-checkout: |
-          '/*'
-          '!*.deb'
+          /*
+          !*.deb
         sparse-checkout-cone-mode: false
     - name: Checkout X11 compiled packages repo
       uses: actions/checkout@v7
@@ -508,8 +508,8 @@ jobs:
         token: ${{ secrets.TERMUXBOT2_TOKEN }}
         path: termux-x11
         sparse-checkout: |
-          '/*'
-          '!*.deb'
+          /*
+          !*.deb
         sparse-checkout-cone-mode: false
     # There is no root repo, because root does not work inside greater.underscore app
     - name: Import GPG key
