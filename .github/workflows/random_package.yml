@@ -48,7 +48,7 @@ jobs:
   LogFailure:
     runs-on: ubuntu-slim
     needs: Build
-    if: ${{ failure() }}
+    #if: ${{ failure() }}
     steps:
       - name: Write failure list
         run: echo "=== Build failed for ${{ needs.RandomName.outputs.PACKAGE_NAME }}"
