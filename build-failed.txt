@@ -4,3 +4,5 @@ rustscan
 gnucash
 lzop
 kmenuedit
+hugin
+kf6-kuserfeedback
