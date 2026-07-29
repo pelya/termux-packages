@@ -34,8 +34,9 @@ jobs:
 
   Build:
     permissions:
-      contents: read
+      contents: write
     needs: RandomName
+    runs-on: ubuntu-slim
     name: Build ${{ needs.RandomName.outputs.PACKAGE_NAME }}
     if: ${{ needs.RandomName.outputs.PACKAGE_NAME != '' && github.repository == 'pelya/termux-packages' }}
     steps:
