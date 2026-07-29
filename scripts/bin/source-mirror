@@ -157,6 +157,9 @@ for pkg in ${total_packages}; do
   if [ "${TERMUX_PKG_NAME}" = "aapt" ]; then
     echo "aapt git archive is bigger than 2 gigabytes and cannot be uploaded to Github source mirror"
     continue
+  elif [ "${TERMUX_PKG_NAME}" = "angle-android" ]; then
+    echo "angle-android package points to the invalid git branch and instead clones the whole repo in the custom build step"
+    continue
   fi
 
   # TERMUX_PKG_SRCURL is actually an archive, loop through it
