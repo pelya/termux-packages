@@ -26,3 +26,5 @@ xh
 ecl
 phonon-qt6
 plasma-systemmonitor
+music-file-organizer
+gtkmm2
