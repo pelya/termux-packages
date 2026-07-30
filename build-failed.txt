@@ -10,3 +10,5 @@ b3sum
 ark
 unicode-data
 helix
+codeblocks
+glpk
