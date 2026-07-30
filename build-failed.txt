@@ -42,3 +42,5 @@ vkmark
 boinc
 zipios
 openimageio
+ibus
+yacreader
