@@ -32,3 +32,5 @@ libjansi
 libowfat
 nemo
 yara
+hunspell-nl
+wlr-randr
