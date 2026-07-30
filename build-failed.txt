@@ -16,3 +16,5 @@ vale
 pypy
 mozo
 rmpc
+khangman
+maxima
