@@ -14,3 +14,5 @@ codeblocks
 glpk
 vale
 pypy
+mozo
+rmpc
