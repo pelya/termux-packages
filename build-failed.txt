@@ -38,3 +38,5 @@ gvfs
 spiped
 sbcl
 mate-settings-daemon
+vkmark
+boinc
