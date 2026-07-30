@@ -20,3 +20,5 @@ khangman
 maxima
 blueprint-compiler
 xorg-xrandr
+proxychains-ng
+yad
