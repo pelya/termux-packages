@@ -40,3 +40,5 @@ sbcl
 mate-settings-daemon
 vkmark
 boinc
+zipios
+openimageio
