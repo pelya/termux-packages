@@ -36,3 +36,5 @@ hunspell-nl
 wlr-randr
 gvfs
 spiped
+sbcl
+mate-settings-daemon
