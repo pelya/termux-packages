@@ -34,3 +34,5 @@ nemo
 yara
 hunspell-nl
 wlr-randr
+gvfs
+spiped
