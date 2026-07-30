@@ -24,3 +24,5 @@ proxychains-ng
 yad
 xh
 ecl
+phonon-qt6
+plasma-systemmonitor
