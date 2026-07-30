@@ -93,6 +93,8 @@ def parse_build_file_dependencies(path):
             deps.add(f'lib{lib}-static')
         if f'{lib}' in deps and f'{lib}-static' not in deps:
             deps.add(f'{lib}-static')
+    if 'libuuid' in deps:
+        deps.add('util-linux-static')
     return deps
 
 def parse_build_file_antidependencies(path):
