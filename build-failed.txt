@@ -48,3 +48,5 @@ tdl
 kde-gtk-config
 neomutt
 vifm
+angband
+p11-kit
