@@ -50,3 +50,5 @@ neomutt
 vifm
 angband
 p11-kit
+fltk
+pdftk
