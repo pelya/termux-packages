@@ -44,3 +44,5 @@ zipios
 openimageio
 ibus
 yacreader
+tdl
+kde-gtk-config
