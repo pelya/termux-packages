@@ -12,3 +12,5 @@ unicode-data
 helix
 codeblocks
 glpk
+vale
+pypy
