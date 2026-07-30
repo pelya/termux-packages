@@ -18,3 +18,5 @@ mozo
 rmpc
 khangman
 maxima
+blueprint-compiler
+xorg-xrandr
