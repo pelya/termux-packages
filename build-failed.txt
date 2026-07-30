@@ -46,3 +46,5 @@ ibus
 yacreader
 tdl
 kde-gtk-config
+neomutt
+vifm
