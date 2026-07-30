@@ -8,3 +8,5 @@ hugin
 kf6-kuserfeedback
 b3sum
 ark
+unicode-data
+helix
