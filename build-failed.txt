@@ -30,3 +30,5 @@ music-file-organizer
 gtkmm2
 libjansi
 libowfat
+nemo
+yara
