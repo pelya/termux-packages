@@ -22,3 +22,5 @@ blueprint-compiler
 xorg-xrandr
 proxychains-ng
 yad
+xh
+ecl
