@@ -15,12 +15,6 @@ MAN3DIR=$TERMUX_PREFIX/share/man/man3
 "
 TERMUX_PKG_MAKE_PROCESSES=1
 
-termux_step_pre_configure() {
-	# Use pregenerated entities.h.
-	cp $TERMUX_PKG_BUILDER_DIR/entities.h $TERMUX_PKG_BUILDDIR/
-	touch -d "next hour" $TERMUX_PKG_BUILDDIR/entities.h
-}
-
 termux_step_make() {
 	make CC=gcc CROSS= CCC=$CC
 }
