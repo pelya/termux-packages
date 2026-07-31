@@ -74,3 +74,5 @@ carbonyl-host-tools
 shellharden
 libvxl
 wallust
+libgrpc
+kakoune-lsp
