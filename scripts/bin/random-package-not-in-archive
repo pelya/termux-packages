@@ -30,7 +30,7 @@ for pkg in ${total_packages}; do
   fi
 done
 
-echo "Packages: ${no_of_total_packages} total, ${no_of_built_packages} built, $(wc -l build-failed.txt) failed." >&2
+echo "Packages: ${no_of_total_packages} total, ${no_of_built_packages} built, $(wc -l <build-failed.txt) failed." >&2
 
 for i in `seq 100`; do
   random_package_no=$(shuf -i 1-"${no_of_total_packages}" -n 1)
