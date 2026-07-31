@@ -203,6 +203,7 @@ elif [ "$COMMAND" = "upload" ]; then
   echo "====="
   echo "Uploading finished"
   echo "====="
+  rm -f ${DOWNLOAD_DIR}/list-*.txt ${DOWNLOAD_DIR}/list-*.sha256 ${DOWNLOAD_DIR}/upload-failed.txt
 elif [ "$COMMAND" = "clean" ]; then
   for list_file in ${DOWNLOAD_DIR}/list-*.txt; do
     mirror_name="$(basename ${list_file} | sed -E 's/list-(.*)[.]txt/\1/')"
@@ -213,6 +214,7 @@ elif [ "$COMMAND" = "clean" ]; then
       gh release delete-asset -y "${mirror_name}" "${source_file}"
     done
   done
+  rm -f ${DOWNLOAD_DIR}/list-*.txt ${DOWNLOAD_DIR}/list-*.sha256 ${DOWNLOAD_DIR}/upload-failed.txt
 fi
 
 rm -rf ${TERMUX_PKG_TMPDIR}
