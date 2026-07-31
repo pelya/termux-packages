@@ -72,3 +72,5 @@ webkitgtk-6.0
 carbonyl
 carbonyl-host-tools
 shellharden
+libvxl
+wallust
