@@ -70,3 +70,5 @@ n2n
 vttest
 webkitgtk-6.0
 carbonyl
+carbonyl-host-tools
+shellharden
