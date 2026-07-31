@@ -23,3 +23,12 @@
  endif
  
  ifneq ($(DIET),)
+@@ -1190,7 +1190,7 @@
+ 	-$(CROSS)$(RANLIB) $@
+ 
+ t: t.o libowfat.a libsocket
+-	$(DIET) $(CCC) -g -o $@ t.o libowfat.a `cat libsocket` -lpthread $(LDFLAGS)
++	$(DIET) $(CCC) -g -o $@ t.o libowfat.a `cat libsocket` $(LDFLAGS)
+ 
+ .PHONY: all clean tar install rename
+ clean:
