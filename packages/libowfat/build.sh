@@ -20,3 +20,7 @@ termux_step_pre_configure() {
 	cp $TERMUX_PKG_BUILDER_DIR/entities.h $TERMUX_PKG_BUILDDIR/
 	touch -d "next hour" $TERMUX_PKG_BUILDDIR/entities.h
 }
+
+termux_step_make() {
+	make CC=gcc CROSS= CCC=$CC
+}
