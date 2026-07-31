@@ -5,7 +5,7 @@ TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION=master
 TERMUX_PKG_REVISION=1
 TERMUX_PKG_SRCURL=https://codeberg.org/Anoxinon_e.V./xmppc/archive/master.tar.gz
-TERMUX_PKG_SHA256=05259ec5cba25f693edfe01389a3405835404539c7817fb208c201e29480e6b7
+TERMUX_PKG_SHA256=00c835a81a470e7566d67375efc4e344b26b17419c20f853a0fd125f41df5d90
 TERMUX_PKG_DEPENDS="libstrophe, glib, gpgme"
 
 termux_step_pre_configure() {
