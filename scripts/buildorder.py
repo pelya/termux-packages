@@ -86,7 +86,6 @@ def parse_build_file_dependencies(path):
         'xpm',
         'xfce4util',
         'freetype',
-        # 'uuid',
         'png',
     ]:
         if f'lib{lib}' in deps and f'lib{lib}-static' not in deps:
