@@ -1,5 +1,4 @@
-#!/bin/sh
-# Randomise buildorder.py test on packages directory
+#!/bin/bash
 
 export TERMUX_SCRIPTDIR
 TERMUX_SCRIPTDIR=$(realpath "$(dirname "$0")/../..") # Root of repository.
@@ -11,6 +10,7 @@ no_of_total_packages=0
 total_packages=$(find packages x11-packages -mindepth 1 -maxdepth 1 -type d | sort)
 
 [ -n "${total_packages}" ] && no_of_total_packages=$(echo "${total_packages}" | wc -l)
+no_of_built_packages=0
 
 for repo in $(jq --raw-output 'del(.pkg_format) | keys | .[]' repo.json); do
   REPOSITORY_NAME=$(jq --raw-output '.["'$repo'"].name' repo.json)
@@ -22,6 +22,15 @@ for repo in $(jq --raw-output 'del(.pkg_format) | keys | .[]' repo.json); do
     curl -L "$REPOSITORY_URL/dists/$REPOSITORY_DISTRIBUTION/$REPOSITORY_COMPONENT/binary-aarch64/Packages" \
       -o $REPOSITORY_NAME.pkglist >/dev/null || exit 1
 done
+
+for pkg in ${total_packages}; do
+  pkg=$(basename ${pkg})
+  if grep -Fx "Package: ${pkg}" *.pkglist >/dev/null; then
+    no_of_built_packages=$(expr ${no_of_built_packages} + 1)
+  fi
+done
+
+echo "Packages: ${no_of_total_packages} total, ${no_of_built_packages} built, $(wc -l build-failed.txt) failed." >&2
 
 for i in `seq 100`; do
   random_package_no=$(shuf -i 1-"${no_of_total_packages}" -n 1)
