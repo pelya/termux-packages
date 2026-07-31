@@ -64,3 +64,5 @@ wxwidgets
 gexiv2
 frobtads
 mdbook-plantuml
+openvdb
+lenmus
