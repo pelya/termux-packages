@@ -9,6 +9,6 @@ TERMUX_PKG_SHA256=00c835a81a470e7566d67375efc4e344b26b17419c20f853a0fd125f41df5d
 TERMUX_PKG_DEPENDS="libstrophe, glib, gpgme"
 
 termux_step_pre_configure() {
-    CFLAGS+=" -Wno-strict-prototypes"
+	CFLAGS+=" -Wno-strict-prototypes"
 	./bootstrap.sh
 }
