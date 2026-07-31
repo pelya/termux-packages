@@ -84,3 +84,5 @@ gojq
 atril
 spidermonkey
 chrony
+ascii
+vcsh
