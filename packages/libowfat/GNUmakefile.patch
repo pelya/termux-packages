@@ -32,3 +32,13 @@
  
  .PHONY: all clean tar install rename
  clean:
+@@ -1390,6 +1390,9 @@
+ srcdirs=$(subst :, ,$(VPATH))
+ srcfiles=$(foreach dir,$(srcdirs),$(wildcard $(dir)/*.c))
+ 
++json:
++	$(CC) -I. -o $@ $@.c
++
+ compile_commands.json.tmpl: json
+ 	./json $(srcfiles) > $@
+ 
