@@ -58,3 +58,5 @@ kdeconnect
 valkey
 chroma-visualizer
 hledger
+senpai
+mogan
