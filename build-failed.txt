@@ -54,3 +54,5 @@ fltk
 pdftk
 gucharmap
 mint-themes
+kdeconnect
+valkey
