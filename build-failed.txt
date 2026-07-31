@@ -62,3 +62,5 @@ senpai
 mogan
 wxwidgets
 gexiv2
+frobtads
+mdbook-plantuml
