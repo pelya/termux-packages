@@ -78,3 +78,5 @@ libgrpc
 kakoune-lsp
 libntl
 libxdg-basedir
+swi-prolog
+mu
