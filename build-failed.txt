@@ -56,3 +56,5 @@ gucharmap
 mint-themes
 kdeconnect
 valkey
+chroma-visualizer
+hledger
