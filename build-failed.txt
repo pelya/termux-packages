@@ -60,3 +60,5 @@ chroma-visualizer
 hledger
 senpai
 mogan
+wxwidgets
+gexiv2
