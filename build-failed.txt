@@ -76,3 +76,5 @@ libvxl
 wallust
 libgrpc
 kakoune-lsp
+libntl
+libxdg-basedir
