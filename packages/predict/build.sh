@@ -17,20 +17,18 @@ termux_step_pre_configure() {
 
 # shellcheck disable=SC2086 # We actually want word splitting on those variables
 termux_step_make() {
-	echo "char *predictpath={\"$TERMUX_PREFIX/opt/predict/\"}, soundcard=1, *version={\"$(cat .version)\"};" > predict.h
-	$CC $CFLAGS $CPPFLAGS $LDFLAGS -Wall -Wno-deprecated-non-prototype predict.c -lm -lncurses -o predict
+	$CC $CFLAGS $CPPFLAGS $LDFLAGS -Wall -Wno-deprecated-non-prototype predict.c -lcurl -lncurses -lm -o predict \
+		-DBUILD_DIR="\"$TERMUX_PREFIX/opt/predict/\"" -DPREDICT_VERSION="\"$(cat .version)\""
 }
 
 termux_step_make_install() {
 	mkdir -p "$TERMUX_PREFIX"/opt/predict
 
 	install -Dm700 predict "$TERMUX_PREFIX"/opt/predict/predict
-	install -Dm700 kepupdate "$TERMUX_PREFIX"/opt/predict/kepupdate
 	cp -r ./default "$TERMUX_PREFIX"/opt/predict/
 	cp -r ./vocalizer "$TERMUX_PREFIX"/opt/predict/
 
 	gzip -c "$PWD"/docs/man/predict.1 > "$TERMUX_PREFIX"/share/man/man1/predict.1.gz
 
 	ln -sfr "$TERMUX_PREFIX"/opt/predict/predict "$TERMUX_PREFIX"/bin/predict
-	ln -sfr "$TERMUX_PREFIX"/opt/predict/kepupdate "$TERMUX_PREFIX"/bin/kepupdate
 }
