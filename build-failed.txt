@@ -52,3 +52,5 @@ angband
 p11-kit
 fltk
 pdftk
+gucharmap
+mint-themes
