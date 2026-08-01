@@ -106,3 +106,5 @@ wezterm-nightly
 mplayer
 komorebi
 print-manager
+libgf2x
+dolphin
