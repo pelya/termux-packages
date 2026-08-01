@@ -120,3 +120,5 @@ tenacity
 secure-delete
 recode
 zsh
+tree-sitter-bash
+wmaker
