@@ -86,3 +86,5 @@ spidermonkey
 chrony
 ascii
 vcsh
+mediainfo
+pv
