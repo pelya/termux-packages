@@ -118,3 +118,5 @@ rofi
 libime
 tenacity
 secure-delete
+recode
+zsh
