@@ -94,3 +94,5 @@ openscad
 dia
 libmnl
 opus-tools
+kdbg
+xfce4-datetime-plugin
