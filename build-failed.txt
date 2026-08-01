@@ -122,3 +122,5 @@ recode
 zsh
 tree-sitter-bash
 wmaker
+fennel
+gcr4
