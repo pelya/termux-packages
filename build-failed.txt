@@ -108,3 +108,5 @@ komorebi
 print-manager
 libgf2x
 dolphin
+mindforger
+haproxy
