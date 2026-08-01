@@ -114,3 +114,5 @@ fdm
 gnome-keyring
 hunspell-hu
 zeronet
+rofi
+libime
