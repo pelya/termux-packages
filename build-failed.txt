@@ -98,3 +98,5 @@ kdbg
 xfce4-datetime-plugin
 e16
 ccache
+qt5-qtlocation
+gedit
