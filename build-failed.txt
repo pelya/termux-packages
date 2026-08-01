@@ -96,3 +96,5 @@ libmnl
 opus-tools
 kdbg
 xfce4-datetime-plugin
+e16
+ccache
