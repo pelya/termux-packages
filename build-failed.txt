@@ -90,3 +90,5 @@ mediainfo
 pv
 lux
 pinentry-gnome3
+openscad
+dia
