@@ -112,3 +112,5 @@ mindforger
 haproxy
 fdm
 gnome-keyring
+hunspell-hu
+zeronet
