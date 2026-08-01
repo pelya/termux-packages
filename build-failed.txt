@@ -100,3 +100,5 @@ e16
 ccache
 qt5-qtlocation
 gedit
+lxtask
+qt5-qtsensors
