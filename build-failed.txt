@@ -116,3 +116,5 @@ hunspell-hu
 zeronet
 rofi
 libime
+tenacity
+secure-delete
