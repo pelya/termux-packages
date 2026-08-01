@@ -88,3 +88,5 @@ ascii
 vcsh
 mediainfo
 pv
+lux
+pinentry-gnome3
