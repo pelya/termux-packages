@@ -104,3 +104,5 @@ lxtask
 qt5-qtsensors
 wezterm-nightly
 mplayer
+komorebi
+print-manager
