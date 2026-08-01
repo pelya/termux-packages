@@ -110,3 +110,5 @@ libgf2x
 dolphin
 mindforger
 haproxy
+fdm
+gnome-keyring
