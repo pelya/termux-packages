@@ -92,3 +92,5 @@ lux
 pinentry-gnome3
 openscad
 dia
+libmnl
+opus-tools
