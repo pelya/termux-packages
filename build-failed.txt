@@ -150,3 +150,5 @@ lnav
 wxmaxima
 cabal-install
 cowsay
+lxmenu-data
+ldc
