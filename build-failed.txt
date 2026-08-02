@@ -148,3 +148,5 @@ gforth
 ccextractor
 lnav
 wxmaxima
+cabal-install
+cowsay
