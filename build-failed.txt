@@ -138,3 +138,5 @@ neochat
 llama-cpp
 libwv
 ndk-multilib
+python2
+httping
