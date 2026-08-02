@@ -142,3 +142,5 @@ python2
 httping
 pwsafe
 pypy3
+gkermit
+libgmime
