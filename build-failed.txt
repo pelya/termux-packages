@@ -140,3 +140,5 @@ libwv
 ndk-multilib
 python2
 httping
+pwsafe
+pypy3
