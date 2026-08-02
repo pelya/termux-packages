@@ -128,3 +128,5 @@ cava
 spek
 emacs
 amberol
+soju
+qgit
