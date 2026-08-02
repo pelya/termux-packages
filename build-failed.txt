@@ -126,3 +126,5 @@ fennel
 gcr4
 cava
 spek
+emacs
+amberol
