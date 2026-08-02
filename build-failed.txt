@@ -136,3 +136,5 @@ cjs
 libdbusmenu-lxqt
 neochat
 llama-cpp
+libwv
+ndk-multilib
