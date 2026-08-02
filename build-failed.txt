@@ -154,3 +154,5 @@ lxmenu-data
 ldc
 tcc
 openjdk-17
+nethack
+panda3d
