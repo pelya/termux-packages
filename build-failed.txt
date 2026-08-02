@@ -130,3 +130,5 @@ emacs
 amberol
 soju
 qgit
+ckermit
+libpinyin
