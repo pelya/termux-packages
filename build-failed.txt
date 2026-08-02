@@ -132,3 +132,5 @@ soju
 qgit
 ckermit
 libpinyin
+cjs
+libdbusmenu-lxqt
