@@ -134,3 +134,5 @@ ckermit
 libpinyin
 cjs
 libdbusmenu-lxqt
+neochat
+llama-cpp
