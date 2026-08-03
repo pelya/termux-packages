@@ -158,3 +158,5 @@ nethack
 panda3d
 okular
 pikiwidb
+ncmpcpp
+php-apcu
