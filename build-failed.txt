@@ -168,3 +168,5 @@ morphosis
 kmag
 pdfcpu
 samurai
+dex2jar
+xcape
