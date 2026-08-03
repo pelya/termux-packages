@@ -23,4 +23,4 @@ jobs:
       - name: Clean source mirror
         env:
           GH_TOKEN: ${{ github.token }}
-        run: ./scripts/source-mirror clean
+        run: ./scripts/bin/source-mirror clean
