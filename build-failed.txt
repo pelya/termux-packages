@@ -178,3 +178,5 @@ muchsync
 pipes.sh
 newsboat
 stone
+rxfetch
+gcr
