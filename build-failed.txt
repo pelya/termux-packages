@@ -170,3 +170,5 @@ pdfcpu
 samurai
 dex2jar
 xcape
+fdroidcl
+notmuch
