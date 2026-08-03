@@ -172,3 +172,5 @@ dex2jar
 xcape
 fdroidcl
 notmuch
+poke
+yadm
