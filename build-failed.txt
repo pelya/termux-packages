@@ -174,3 +174,5 @@ fdroidcl
 notmuch
 poke
 yadm
+muchsync
+pipes.sh
