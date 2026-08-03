@@ -160,3 +160,5 @@ okular
 pikiwidb
 ncmpcpp
 php-apcu
+cccc
+hors
