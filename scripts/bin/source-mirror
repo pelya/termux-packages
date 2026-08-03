@@ -187,33 +187,46 @@ done
 wait
 
 if [ "$COMMAND" = "download" ]; then
-  echo "====="
-  echo "Download failed for following packages:"
-  echo "====="
-  cat "${DOWNLOAD_DIR}/download-failed.txt"
-  echo "====="
-  echo "Please download these source archives manually using a web browser,"
-  echo "rename downloaded file as specified here, and upload to source mirror."
-  echo "====="
+  if [ -f "${DOWNLOAD_DIR}/download-failed.txt" ]; then
+    echo "====="
+    echo "Download failed for following packages:"
+    echo "====="
+    cat "${DOWNLOAD_DIR}/download-failed.txt"
+    echo "====="
+    echo "Please download these source archives manually using a web browser,"
+    echo "rename downloaded file as specified here, and upload to source mirror."
+    echo "====="
+  else
+    echo "====="
+    echo "All source archives are downloaded to disk"
+    echo "====="
+  fi
 elif [ "$COMMAND" = "upload" ]; then
-  echo "====="
-  echo "Upload failed for following packages:"
-  echo "====="
-  cat "${DOWNLOAD_DIR}/upload-failed.txt"
-  echo "====="
-  echo "Uploading finished"
-  echo "====="
+  if [ -f "${DOWNLOAD_DIR}/upload-failed.txt" ]; then
+    echo "====="
+    echo "Upload failed for following packages:"
+    echo "====="
+    cat "${DOWNLOAD_DIR}/upload-failed.txt"
+    echo "====="
+  else
+    echo "====="
+    echo "All source archives are uploaded to source mirror"
+    echo "====="
+  fi
   rm -f ${DOWNLOAD_DIR}/list-*.txt ${DOWNLOAD_DIR}/list-*.sha256 ${DOWNLOAD_DIR}/upload-failed.txt
 elif [ "$COMMAND" = "clean" ]; then
   for list_file in ${DOWNLOAD_DIR}/list-*.txt; do
     mirror_name="$(basename ${list_file} | sed -E 's/list-(.*)[.]txt/\1/')"
     echo "====="
-    echo "Files to remove from mirror ${mirror_name}:"
+    echo "Removing outdated source archives from source mirror ${mirror_name}:"
     cat "${list_file}" | while read source_file; do
       echo "${source_file}"
       gh release delete-asset -y "${mirror_name}" "${source_file}"
     done
   done
+  echo "====="
+  echo "Done"
+  echo "====="
   rm -f ${DOWNLOAD_DIR}/list-*.txt ${DOWNLOAD_DIR}/list-*.sha256
 fi
 
