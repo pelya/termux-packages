@@ -214,7 +214,7 @@ elif [ "$COMMAND" = "clean" ]; then
       gh release delete-asset -y "${mirror_name}" "${source_file}"
     done
   done
-  rm -f ${DOWNLOAD_DIR}/list-*.txt ${DOWNLOAD_DIR}/list-*.sha256 ${DOWNLOAD_DIR}/upload-failed.txt
+  rm -f ${DOWNLOAD_DIR}/list-*.txt ${DOWNLOAD_DIR}/list-*.sha256
 fi
 
 rm -rf ${TERMUX_PKG_TMPDIR}
