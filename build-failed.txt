@@ -176,3 +176,5 @@ poke
 yadm
 muchsync
 pipes.sh
+newsboat
+stone
