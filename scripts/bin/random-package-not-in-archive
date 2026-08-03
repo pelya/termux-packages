@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Github workflow schedule is very unreliable, so to run this script, run `crontab -e` on your PC and add following command:
+# */5 * * * * export GH_TOKEN=<your Github token> ; [ $(gh run list --repo=pelya/termux-packages --status in_progress | wc -l) -le 2 ] && gh workflow run --repo pelya/termux-packages random_package.yml 2>&1 | logger --tag cronjob
+
 export TERMUX_SCRIPTDIR
 TERMUX_SCRIPTDIR=$(realpath "$(dirname "$0")/../..") # Root of repository.
 
