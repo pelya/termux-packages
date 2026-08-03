@@ -180,3 +180,5 @@ newsboat
 stone
 rxfetch
 gcr
+mdbook-toc
+hunspell-ru
