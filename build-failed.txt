@@ -156,3 +156,5 @@ tcc
 openjdk-17
 nethack
 panda3d
+okular
+pikiwidb
