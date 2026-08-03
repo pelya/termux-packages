@@ -166,3 +166,5 @@ cinnamon
 mtd-utils
 morphosis
 kmag
+pdfcpu
+samurai
