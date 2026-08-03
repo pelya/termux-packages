@@ -162,3 +162,5 @@ ncmpcpp
 php-apcu
 cccc
 hors
+cinnamon
+mtd-utils
