@@ -499,22 +499,7 @@ jobs:
         repository: pelya/termux-packages-main
         ref: 2026-07-10
         token: ${{ secrets.TERMUXBOT2_TOKEN }}
-        path: termux-main
-        sparse-checkout: |
-          /*
-          !*.deb
-        sparse-checkout-cone-mode: false
-    - name: Checkout X11 compiled packages repo
-      uses: actions/checkout@v7
-      with:
-        repository: pelya/termux-packages-x11
-        ref: 2026-07-10
-        token: ${{ secrets.TERMUXBOT2_TOKEN }}
-        path: termux-x11
-        sparse-checkout: |
-          /*
-          !*.deb
-        sparse-checkout-cone-mode: false
+        path: packages-repo
     # There is no root repo, because root does not work inside greater.underscore app.
     - name: Import GPG key
       uses: crazy-max/ghaction-import-gpg@v7
@@ -556,33 +541,35 @@ jobs:
           if [ "${{ github.event.inputs.rebuild-dependencies }}" != "true" ]; then
             # Make sure the package list is downloaded so we won't overwrite it with an empty list.
             # Extra paranoid check because I've corrupted my repo that one time.
-            ls ${REPOSITORY_NAME}/dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-aarch64/Packages >/dev/null || exit 1
-            ls ${REPOSITORY_NAME}/dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-arm/Packages >/dev/null || exit 1
-            ls ${REPOSITORY_NAME}/dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-i686/Packages >/dev/null || exit 1
-            ls ${REPOSITORY_NAME}/dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-x86_64/Packages >/dev/null || exit 1
+            ls packages-repo/dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-aarch64/Packages >/dev/null || exit 1
+            ls packages-repo/dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-arm/Packages >/dev/null || exit 1
+            ls packages-repo/dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-i686/Packages >/dev/null || exit 1
+            ls packages-repo/dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-x86_64/Packages >/dev/null || exit 1
           fi
 
           # Publishing repository changes.
-          termux-apt-repo/termux-apt-repo --sign --use-hard-links --add-existing-repo \
-            tmp-debs ${REPOSITORY_NAME} ${REPOSITORY_DISTRIBUTION} ${REPOSITORY_COMPONENT} || exit 1
-
-          cd ${REPOSITORY_NAME} || exit 1
-          git config --local user.email "buildbot@termux.dev"
-          git config --local user.name "Termux build bot"
-          git add -f --sparse dists
-          git commit -m 'Metadata' \
-            dists/${REPOSITORY_DISTRIBUTION}/Release \
-            dists/${REPOSITORY_DISTRIBUTION}/Release.gpg \
-            dists/${REPOSITORY_DISTRIBUTION}/InRelease \
-            dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/Contents-* \
-            dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages \
-            dists/${REPOSITORY_DISTRIBUTION}/${REPOSITORY_COMPONENT}/binary-*/Packages.xz || true
-          if git commit -m 'Packages' -a; then
-            git push || exit 1
-          fi
-          cd ..
+          termux-apt-repo/termux-apt-repo --sign --use-hard-links --add-existing-repo --github-releases --no-contents-xz \
+            tmp-debs packages-repo ${REPOSITORY_DISTRIBUTION} ${REPOSITORY_COMPONENT} || exit 1
 
         done
+
+        cd packages-repo || exit 1
+        git config --local user.email "buildbot@termux.dev"
+        git config --local user.name "Termux build bot"
+
+        cd releases || exit 1
+        for TAG in *; do
+          echo "Uploading $TAG"
+          gh release view $TAG >/dev/null 2>&1 || gh release create $TAG -n $TAG || exit 1
+          gh release upload --clobber $TAG $TAG/*.deb || exit 1
+        done
+        cd ..
+
+        if git commit -m 'Packages' dist; then
+          git push || exit 1
+        fi
+        cd ..
+
     - name: Upload source archives to source mirror
       env:
         GH_TOKEN: ${{ secrets.TERMUXBOT2_TOKEN }}
