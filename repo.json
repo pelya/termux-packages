@@ -6,6 +6,12 @@
     "component": "main",
     "url": "https://github.com/pelya/termux-packages-main/raw/refs/heads/2026-07-10"
   },
+  "root-packages": {
+    "name": "termux-root",
+    "distribution": "root",
+    "component": "stable",
+    "url": "https://github.com/pelya/termux-packages-main/raw/refs/heads/2026-07-10"
+  },
   "x11-packages": {
     "name": "termux-x11",
     "distribution": "x11",

@@ -10,7 +10,7 @@ cd "${TERMUX_SCRIPTDIR}" || exit 1
 
 no_of_total_packages=0
 
-total_packages=$(find packages x11-packages -mindepth 1 -maxdepth 1 -type d | sort)
+total_packages=$(find packages root-packages x11-packages -mindepth 1 -maxdepth 1 -type d | sort)
 
 [ -n "${total_packages}" ] && no_of_total_packages=$(echo "${total_packages}" | wc -l)
 no_of_built_packages=0
