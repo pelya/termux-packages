@@ -493,7 +493,7 @@ jobs:
       with:
         repository: pelya/termux-apt-repo
         path: termux-apt-repo
-    - name: Checkout main compiled packages repo
+    - name: Checkout apt repo
       uses: actions/checkout@v7
       with:
         repository: pelya/termux-packages-main
@@ -565,9 +565,7 @@ jobs:
         done
         cd ..
 
-        if git commit -m 'Packages' dist; then
-          git push || exit 1
-        fi
+        git commit -m 'Packages' -a && git push || exit 1
         cd ..
 
     - name: Upload source archives to source mirror
