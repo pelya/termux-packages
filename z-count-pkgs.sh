@@ -27,6 +27,8 @@ done
 
 echo "lib: $LIBCNT"
 
+echo "===="
+
 for F in '@(0|1|2|3|4|5|6|7|8|9)' `echo {a..z} | sed -E 's/([^ ])/@(\1)/g'` `echo {a..z} | sed -E 's/([^ ])/@(lib\1)/g'`; do
   CNT="$(ls packages/${F}*/build.sh x11-packages/$F*/build.sh root-packages/$F*/build.sh | wc -l)"
   echo "$F" | grep '@(l)' >/dev/null && CNT=$(expr $CNT - $LIBCNT)
