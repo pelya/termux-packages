@@ -10,6 +10,6 @@
     "name": "termux-x11",
     "distribution": "x11",
     "component": "main",
-    "url": "https://github.com/pelya/termux-packages-x11/raw/refs/heads/2026-07-10"
+    "url": "https://github.com/pelya/termux-packages-main/raw/refs/heads/2026-07-10"
   }
 }
