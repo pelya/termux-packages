@@ -190,3 +190,5 @@ turbo
 surf
 kbd
 bastet
+weston
+libaio
