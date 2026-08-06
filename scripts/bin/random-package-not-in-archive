@@ -37,7 +37,7 @@ echo "Packages: ${no_of_total_packages} total, ${no_of_built_packages} built, $(
 
 for i in `seq 100`; do
   random_package_no=$(shuf -i 1-"${no_of_total_packages}" -n 1)
-  random_package=$(echo "${total_packages}" | head -n"${random_package_no}" | tail -n1)
+  random_package=$(echo "${total_packages}" | sed -n "${random_package_no}p")
   random_package=$(basename ${random_package})
   if grep -Fx "Package: ${random_package}" *.pkglist >/dev/null; then
     continue
@@ -47,5 +47,7 @@ for i in `seq 100`; do
     continue
   fi
   echo "${random_package}"
-  break
+  exit 0
 done
+
+echo "All packages are built." >&2
