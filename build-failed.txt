@@ -214,3 +214,5 @@ python-contourpy
 exfatprogs
 plasma-workspace-wallpapers
 elixir
+sfml
+mariadb
