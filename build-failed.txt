@@ -198,3 +198,5 @@ wezterm
 ntfs-3g
 gnome-calculator
 marksman
+neofetch
+sideloader
