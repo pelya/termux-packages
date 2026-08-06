@@ -182,3 +182,5 @@ rxfetch
 gcr
 mdbook-toc
 hunspell-ru
+libosmpbf
+nmap
