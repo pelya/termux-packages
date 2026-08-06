@@ -196,3 +196,5 @@ fcitx5-chinese-addons
 eww
 wezterm
 ntfs-3g
+gnome-calculator
+marksman
