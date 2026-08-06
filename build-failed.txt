@@ -216,3 +216,5 @@ plasma-workspace-wallpapers
 elixir
 sfml
 mariadb
+python-tldp
+edbrowse
