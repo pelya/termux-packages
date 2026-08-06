@@ -220,3 +220,5 @@ python-tldp
 edbrowse
 ircd-irc2
 opencolorio
+fio
+krita
