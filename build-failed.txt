@@ -206,3 +206,5 @@ softether-vpn
 hangover-wine
 python-tflite-runtime
 cbonsai
+btop
+pigz
