@@ -204,3 +204,5 @@ sideloader
 kde-applications
 softether-vpn
 hangover-wine
+python-tflite-runtime
+cbonsai
