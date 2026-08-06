@@ -192,3 +192,5 @@ kbd
 bastet
 weston
 libaio
+fcitx5-chinese-addons
+eww
