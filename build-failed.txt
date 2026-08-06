@@ -208,3 +208,5 @@ python-tflite-runtime
 cbonsai
 btop
 pigz
+libt3highlight
+isync
