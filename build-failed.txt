@@ -218,3 +218,5 @@ sfml
 mariadb
 python-tldp
 edbrowse
+ircd-irc2
+opencolorio
