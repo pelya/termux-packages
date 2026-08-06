@@ -212,3 +212,5 @@ libt3highlight
 isync
 python-contourpy
 exfatprogs
+plasma-workspace-wallpapers
+elixir
