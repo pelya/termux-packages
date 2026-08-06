@@ -184,3 +184,5 @@ mdbook-toc
 hunspell-ru
 libosmpbf
 nmap
+gpg-crypter
+ristretto
