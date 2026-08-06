@@ -186,3 +186,5 @@ libosmpbf
 nmap
 gpg-crypter
 ristretto
+turbo
+surf
