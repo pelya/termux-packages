@@ -202,3 +202,5 @@ neofetch
 sideloader
 6tunnel
 kde-applications
+softether-vpn
+hangover-wine
