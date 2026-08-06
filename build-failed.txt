@@ -194,3 +194,5 @@ weston
 libaio
 fcitx5-chinese-addons
 eww
+wezterm
+ntfs-3g
