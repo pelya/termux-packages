@@ -200,3 +200,5 @@ gnome-calculator
 marksman
 neofetch
 sideloader
+6tunnel
+kde-applications
