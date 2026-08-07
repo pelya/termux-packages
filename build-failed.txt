@@ -340,3 +340,5 @@ kpat
 code-oss
 gifski
 audacity
+sdl2-pango
+trunk
