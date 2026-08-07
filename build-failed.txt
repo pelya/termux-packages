@@ -292,3 +292,5 @@ txikijs
 stoken
 pcmanfm
 units
+taplo
+nwipe
