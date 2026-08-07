@@ -216,3 +216,5 @@ elixir
 cabin
 mate-netbook
 epiphany
+pluma
+cgdb
