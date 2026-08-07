@@ -246,3 +246,5 @@ links
 epiphany
 loqui
 atool
+cgdb
+composer
