@@ -302,3 +302,5 @@ schismtracker
 znc
 libfuse3
 libspelling
+jove
+tinc
