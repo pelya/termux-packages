@@ -236,3 +236,5 @@ pcsx-rearmed
 dvdauthor
 cmusfm
 mgba
+fortune
+ovmf
