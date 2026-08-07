@@ -324,3 +324,5 @@ cabin
 doctest
 jftui
 wavemon
+wrk
+lxqt-openssh-askpass
