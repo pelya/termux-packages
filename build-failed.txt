@@ -316,3 +316,5 @@ shntool
 libcroco
 kubelogin
 pong2
+gnushogi
+minidlna
