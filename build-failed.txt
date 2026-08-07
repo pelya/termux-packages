@@ -290,3 +290,5 @@ marknote
 pocketbase
 txikijs
 stoken
+pcmanfm
+units
