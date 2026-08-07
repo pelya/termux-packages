@@ -202,3 +202,5 @@ neofetch
 sideloader
 boxes
 mosh
+dcraw
+qt5-qtwebengine
