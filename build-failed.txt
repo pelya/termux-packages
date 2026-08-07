@@ -210,3 +210,5 @@ smalltalk
 scrcpy
 plotutils
 mercury
+plasma-nm
+git-credential-manager
