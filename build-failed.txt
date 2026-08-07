@@ -234,3 +234,5 @@ cmusfm
 cinnamon-control-center
 codon
 frida
+rust-analyzer
+hledger-ui
