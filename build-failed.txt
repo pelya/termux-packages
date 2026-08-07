@@ -268,3 +268,5 @@ libt3widget
 megacmd
 pingme
 tea
+xorg-xev
+sdl2-mixer
