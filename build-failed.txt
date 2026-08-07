@@ -310,3 +310,5 @@ maven
 plasma-nm
 mosh
 cfm
+ansifilter
+fcgiwrap
