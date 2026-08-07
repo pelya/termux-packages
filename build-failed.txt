@@ -224,3 +224,5 @@ wasm-component-ld
 mate-control-center
 screen
 motif
+tree-sitter-python
+netpbm
