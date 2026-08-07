@@ -328,3 +328,5 @@ wrk
 lxqt-openssh-askpass
 hilbish
 webp-pixbuf-loader
+mdbook-mermaid
+arc-gtk-theme
