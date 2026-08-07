@@ -326,3 +326,5 @@ jftui
 wavemon
 wrk
 lxqt-openssh-askpass
+hilbish
+webp-pixbuf-loader
