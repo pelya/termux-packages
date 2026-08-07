@@ -212,3 +212,5 @@ plotutils
 mercury
 plasma-nm
 git-credential-manager
+elixir
+cabin
