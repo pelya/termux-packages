@@ -244,3 +244,5 @@ tracepath
 tcplay-veracrypt
 links
 epiphany
+loqui
+atool
