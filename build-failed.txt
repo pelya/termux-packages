@@ -346,3 +346,5 @@ pianobar
 agate
 tinyemu
 electron-for-code-oss
+netcat-openbsd
+bluefish
