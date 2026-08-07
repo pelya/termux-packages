@@ -256,3 +256,5 @@ octave-x
 moon-buggy
 mate-netbook
 cpufetch
+gopls
+glade
