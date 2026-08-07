@@ -322,3 +322,5 @@ i2c-tools
 gsound
 cabin
 doctest
+jftui
+wavemon
