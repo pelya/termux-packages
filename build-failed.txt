@@ -240,3 +240,5 @@ fortune
 ovmf
 fcitx5-gtk-common
 sslscan
+tracepath
+tcplay-veracrypt
