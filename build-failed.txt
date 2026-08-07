@@ -232,3 +232,5 @@ tut
 icewm
 cmusfm
 cinnamon-control-center
+codon
+frida
