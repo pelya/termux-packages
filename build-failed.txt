@@ -314,3 +314,5 @@ ansifilter
 fcgiwrap
 shntool
 libcroco
+kubelogin
+pong2
