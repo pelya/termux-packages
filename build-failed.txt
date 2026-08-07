@@ -318,3 +318,5 @@ kubelogin
 pong2
 gnushogi
 minidlna
+i2c-tools
+gsound
