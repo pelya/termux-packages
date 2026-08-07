@@ -336,3 +336,5 @@ step
 iodine
 onefetch
 ksystemstats
+kpat
+code-oss
