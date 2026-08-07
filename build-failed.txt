@@ -258,3 +258,5 @@ mate-netbook
 cpufetch
 gopls
 glade
+plasma-desktop
+feh
