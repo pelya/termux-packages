@@ -260,3 +260,5 @@ gopls
 glade
 plasma-desktop
 feh
+mtdev
+netsed
