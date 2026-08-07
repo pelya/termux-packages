@@ -306,3 +306,5 @@ jove
 tinc
 ne
 runc
+maven
+plasma-nm
