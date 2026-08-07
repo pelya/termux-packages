@@ -89,6 +89,7 @@ def parse_build_file_dependencies(path):
         'png',
         'fontconfig',
         'expat',
+        'catch2',
     ]:
         if f'lib{lib}' in deps and f'lib{lib}-static' not in deps:
             deps.add(f'lib{lib}-static')
