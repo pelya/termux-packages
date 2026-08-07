@@ -348,3 +348,5 @@ tinyemu
 electron-for-code-oss
 netcat-openbsd
 bluefish
+python-pyqtwebengine
+lxde-icon-theme
