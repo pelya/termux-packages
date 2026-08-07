@@ -208,3 +208,5 @@ libcoap
 chocolate-doom
 smalltalk
 scrcpy
+plotutils
+mercury
