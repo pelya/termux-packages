@@ -226,3 +226,5 @@ minisign
 nexttrace
 ethtool
 tuxpaint
+pandoc
+cinnamon-control-center
