@@ -228,3 +228,5 @@ tree-sitter-python
 netpbm
 zmap
 openfoam
+tut
+icewm
