@@ -31,7 +31,11 @@ for pkg in ${total_packages}; do
     no_of_built_packages=$(expr ${no_of_built_packages} + 1)
     continue
   fi
+  if [ -f build-failed.txt ] \
+      && grep -Fx "${pkg}" build-failed.txt >/dev/null; then
+    continue
+  fi
   echo "${pkg}"
 done
 
-echo "Built ${no_of_built_packages} packages out of ${no_of_total_packages}"
+echo "Built ${no_of_built_packages} packages out of ${no_of_total_packages}, $(wc -l <build-failed.txt) build failed."
