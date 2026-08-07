@@ -296,3 +296,5 @@ taplo
 nwipe
 seerr
 monetdb
+hstr
+lxappearance
