@@ -294,3 +294,5 @@ pcmanfm
 units
 taplo
 nwipe
+seerr
+monetdb
