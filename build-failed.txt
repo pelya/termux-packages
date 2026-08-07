@@ -228,3 +228,5 @@ ethtool
 tuxpaint
 pandoc
 cinnamon-control-center
+pb
+libnet
