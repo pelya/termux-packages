@@ -308,3 +308,5 @@ ne
 runc
 maven
 plasma-nm
+mosh
+cfm
