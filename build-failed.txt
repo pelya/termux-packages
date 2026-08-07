@@ -320,3 +320,5 @@ gnushogi
 minidlna
 i2c-tools
 gsound
+cabin
+doctest
