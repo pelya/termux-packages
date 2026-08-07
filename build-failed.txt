@@ -282,3 +282,5 @@ spatialite-tools
 bindfs
 labwc
 hexyl
+hw-probe
+magic-wormhole-rs
