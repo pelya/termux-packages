@@ -226,3 +226,5 @@ screen
 motif
 tree-sitter-python
 netpbm
+zmap
+openfoam
