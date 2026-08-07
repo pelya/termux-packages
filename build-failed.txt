@@ -254,3 +254,5 @@ sendme
 luajit-lgi
 octave-x
 moon-buggy
+mate-netbook
+cpufetch
