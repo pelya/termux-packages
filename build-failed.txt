@@ -284,3 +284,5 @@ labwc
 hexyl
 hw-probe
 magic-wormhole-rs
+vile
+freeimage
