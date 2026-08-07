@@ -230,3 +230,5 @@ zmap
 openfoam
 tut
 icewm
+cmusfm
+cinnamon-control-center
