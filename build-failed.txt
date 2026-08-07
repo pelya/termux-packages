@@ -234,3 +234,5 @@ sse2neon
 gatling
 pcsx-rearmed
 dvdauthor
+cmusfm
+mgba
