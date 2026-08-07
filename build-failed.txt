@@ -206,3 +206,5 @@ dcraw
 qt5-qtwebengine
 libcoap
 chocolate-doom
+smalltalk
+scrcpy
