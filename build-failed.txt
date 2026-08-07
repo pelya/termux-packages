@@ -248,3 +248,5 @@ loqui
 atool
 cgdb
 composer
+mercury
+rcm
