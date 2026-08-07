@@ -272,3 +272,5 @@ xorg-xev
 sdl2-mixer
 dosbox-x
 erofs-utils
+kibi
+fdkaac
