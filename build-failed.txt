@@ -356,3 +356,5 @@ sshfs
 vulkan-utility-libraries
 libodfgen
 mate-power-manager
+geany-plugins
+viu
