@@ -362,3 +362,5 @@ sway
 wego
 chocolate-doom
 libtsduck
+python-torchvision
+libchipmunk
