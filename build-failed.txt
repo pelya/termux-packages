@@ -224,3 +224,5 @@ fio
 krita
 minisign
 nexttrace
+ethtool
+tuxpaint
