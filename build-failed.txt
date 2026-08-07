@@ -358,3 +358,5 @@ libodfgen
 mate-power-manager
 geany-plugins
 viu
+sway
+wego
