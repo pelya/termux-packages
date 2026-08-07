@@ -222,3 +222,5 @@ btop
 feh
 wasm-component-ld
 mate-control-center
+screen
+motif
