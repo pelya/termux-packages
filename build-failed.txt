@@ -214,3 +214,5 @@ plasma-nm
 git-credential-manager
 elixir
 cabin
+mate-netbook
+epiphany
