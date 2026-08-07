@@ -238,3 +238,5 @@ cmusfm
 mgba
 fortune
 ovmf
+fcitx5-gtk-common
+sslscan
