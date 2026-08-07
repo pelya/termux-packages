@@ -252,3 +252,5 @@ mercury
 rcm
 sendme
 luajit-lgi
+octave-x
+moon-buggy
