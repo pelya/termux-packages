@@ -230,3 +230,5 @@ pandoc
 cinnamon-control-center
 pb
 libnet
+sse2neon
+gatling
