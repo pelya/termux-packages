@@ -344,3 +344,5 @@ sdl2-pango
 trunk
 pianobar
 agate
+tinyemu
+electron-for-code-oss
