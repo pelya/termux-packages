@@ -300,3 +300,5 @@ hstr
 lxappearance
 schismtracker
 znc
+libfuse3
+libspelling
