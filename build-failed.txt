@@ -354,3 +354,5 @@ borgbackup
 libblosc
 sshfs
 vulkan-utility-libraries
+libodfgen
+mate-power-manager
