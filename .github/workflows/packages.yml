@@ -315,8 +315,14 @@ jobs:
           if [ "${{ github.event.inputs.rebuild-dependencies }}" = true ]; then
             DEPENDENCIES=""
           fi
+          set -o pipefail
           ./scripts/run-docker.sh -d ./build-package.sh $DEPENDENCIES -C -a "${{ matrix.target_arch }}" \
-            ${{ case(matrix.target_arch == 'aarch64', '-m', '') }} "${packages[@]}"
+            ${{ case(matrix.target_arch == 'aarch64', '-m', '') }} "${packages[@]}" 2>&1 | tee build.log
+          if [ $? != 0 ] && grep 'GPG verification failed' build.log; then
+            echo "=== Retrying the build one more time, and hope GPG verification error will go away ==="
+            ./scripts/run-docker.sh -d ./build-package.sh $DEPENDENCIES -C -a "${{ matrix.target_arch }}" \
+              ${{ case(matrix.target_arch == 'aarch64', '-m', '') }} "${packages[@]}"
+          fi
         fi
 
     - name: Generate build artifacts
