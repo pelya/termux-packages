@@ -278,3 +278,5 @@ putty
 matplotlib
 avahi
 yazi
+spatialite-tools
+bindfs
