@@ -338,3 +338,5 @@ onefetch
 ksystemstats
 kpat
 code-oss
+gifski
+audacity
