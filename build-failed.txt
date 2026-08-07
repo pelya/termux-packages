@@ -266,3 +266,5 @@ mdds
 mdf2iso
 libt3widget
 megacmd
+pingme
+tea
