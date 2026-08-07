@@ -222,3 +222,5 @@ ircd-irc2
 opencolorio
 fio
 krita
+minisign
+nexttrace
