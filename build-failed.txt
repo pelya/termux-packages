@@ -218,3 +218,5 @@ mate-netbook
 epiphany
 pluma
 cgdb
+btop
+feh
