@@ -312,3 +312,5 @@ mosh
 cfm
 ansifilter
 fcgiwrap
+shntool
+libcroco
