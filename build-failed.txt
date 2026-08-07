@@ -262,3 +262,5 @@ plasma-desktop
 feh
 mtdev
 netsed
+mdds
+mdf2iso
