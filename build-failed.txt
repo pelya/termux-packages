@@ -274,3 +274,5 @@ dosbox-x
 erofs-utils
 kibi
 fdkaac
+putty
+matplotlib
