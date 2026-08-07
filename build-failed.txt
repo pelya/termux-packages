@@ -330,3 +330,5 @@ hilbish
 webp-pixbuf-loader
 mdbook-mermaid
 arc-gtk-theme
+dnsmasq
+authbind
