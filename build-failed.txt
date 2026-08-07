@@ -250,3 +250,5 @@ cgdb
 composer
 mercury
 rcm
+sendme
+luajit-lgi
