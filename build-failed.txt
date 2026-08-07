@@ -360,3 +360,5 @@ geany-plugins
 viu
 sway
 wego
+chocolate-doom
+libtsduck
