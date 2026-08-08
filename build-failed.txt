@@ -268,3 +268,5 @@ libseat
 awscli
 codelldb
 mate
+direvent
+chromium
