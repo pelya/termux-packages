@@ -246,3 +246,5 @@ krfb
 telegram-desktop
 deno
 libcryptsetup
+sslscan
+hw-probe
