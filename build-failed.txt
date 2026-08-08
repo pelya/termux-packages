@@ -256,3 +256,5 @@ audacity
 gnuit
 feroxbuster
 kate
+electron-for-code-oss
+diskus
