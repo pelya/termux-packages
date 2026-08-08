@@ -236,3 +236,5 @@ codon
 frida
 rust-analyzer
 hledger-ui
+minizinc
+webkit2gtk-4.1
