@@ -270,3 +270,5 @@ codelldb
 mate
 direvent
 chromium
+eja
+angle-android
