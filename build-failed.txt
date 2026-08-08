@@ -244,3 +244,5 @@ subtitleripper
 ffsend
 krfb
 telegram-desktop
+deno
+libcryptsetup
