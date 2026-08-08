@@ -250,3 +250,5 @@ sslscan
 hw-probe
 virglrenderer-android
 logrotate
+pandoc
+wine-stable
