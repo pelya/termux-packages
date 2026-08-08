@@ -242,3 +242,5 @@ cboard
 turbopack
 subtitleripper
 ffsend
+krfb
+telegram-desktop
