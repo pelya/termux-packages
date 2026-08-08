@@ -260,3 +260,5 @@ electron-for-code-oss
 diskus
 bvi
 zenity
+git-lfs
+pyqt5
