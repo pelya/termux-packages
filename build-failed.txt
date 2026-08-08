@@ -254,3 +254,5 @@ pandoc
 wine-stable
 audacity
 gnuit
+feroxbuster
+kate
