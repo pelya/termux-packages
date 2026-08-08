@@ -248,3 +248,5 @@ deno
 libcryptsetup
 sslscan
 hw-probe
+virglrenderer-android
+logrotate
