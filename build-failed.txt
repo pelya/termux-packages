@@ -258,3 +258,5 @@ feroxbuster
 kate
 electron-for-code-oss
 diskus
+bvi
+zenity
