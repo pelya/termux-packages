@@ -266,3 +266,5 @@ bdftopcf
 edbrowse
 libseat
 awscli
+codelldb
+mate
