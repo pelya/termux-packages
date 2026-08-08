@@ -252,3 +252,5 @@ virglrenderer-android
 logrotate
 pandoc
 wine-stable
+audacity
+gnuit
