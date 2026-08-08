@@ -240,3 +240,5 @@ minizinc
 webkit2gtk-4.1
 cboard
 turbopack
+subtitleripper
+ffsend
