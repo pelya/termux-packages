@@ -262,3 +262,5 @@ bvi
 zenity
 git-lfs
 pyqt5
+bdftopcf
+edbrowse
