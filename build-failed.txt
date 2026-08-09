@@ -284,3 +284,5 @@ pianobar
 yazi
 hunspell-fr
 tshark
+surfraw
+python-pyqtwebengine
