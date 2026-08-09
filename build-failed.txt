@@ -45,3 +45,4 @@ hunspell-hu
 wezterm-nightly
 pypy3
 ncmpcpp
+hw-probe
