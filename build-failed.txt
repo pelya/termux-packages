@@ -25,3 +25,4 @@ nethack
 carbonyl-host-tools
 marco
 tea
+mplayer
