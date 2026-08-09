@@ -291,3 +291,4 @@ alpine
 cfm
 bore
 tilix
+rust
