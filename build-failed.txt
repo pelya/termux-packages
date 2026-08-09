@@ -8,3 +8,4 @@ wmaker
 sbcl
 gcr
 netpbm
+motif
