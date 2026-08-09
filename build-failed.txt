@@ -44,3 +44,4 @@ muchsync
 hunspell-hu
 wezterm-nightly
 pypy3
+ncmpcpp
