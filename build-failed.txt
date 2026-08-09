@@ -37,3 +37,4 @@ pluma
 libgrpc
 mate-control-center
 weston
+vkmark
