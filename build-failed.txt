@@ -33,3 +33,4 @@ gnome-calculator
 maxima
 qt5-qtlocation
 libosmpbf
+pluma
