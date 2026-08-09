@@ -36,3 +36,4 @@ libosmpbf
 pluma
 libgrpc
 mate-control-center
+weston
