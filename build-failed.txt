@@ -11,3 +11,4 @@ netpbm
 motif
 wezterm
 python-qscintilla
+hunspell-nl
