@@ -50,3 +50,4 @@ electron-for-code-oss
 pinentry-gnome3
 mogan
 p11-kit
+cinnamon
