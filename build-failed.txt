@@ -6,3 +6,4 @@ gforth
 gucharmap
 wmaker
 sbcl
+gcr
