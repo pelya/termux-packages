@@ -28,3 +28,4 @@ tea
 mplayer
 audacity
 gnucash
+git-credential-manager
