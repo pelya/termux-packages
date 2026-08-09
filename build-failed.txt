@@ -5,3 +5,4 @@ rofi
 gforth
 gucharmap
 wmaker
+sbcl
