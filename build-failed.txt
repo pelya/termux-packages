@@ -34,3 +34,4 @@ maxima
 qt5-qtlocation
 libosmpbf
 pluma
+libgrpc
