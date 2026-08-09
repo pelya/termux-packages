@@ -24,3 +24,4 @@ epiphany
 nethack
 carbonyl-host-tools
 marco
+tea
