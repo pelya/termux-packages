@@ -16,3 +16,4 @@ atril
 newsboat
 gvfs
 code-oss
+libime
