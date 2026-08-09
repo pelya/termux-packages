@@ -282,3 +282,5 @@ sse2neon
 hwinfo
 pianobar
 yazi
+hunspell-fr
+tshark
