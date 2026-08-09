@@ -278,3 +278,5 @@ wordgrinder
 cadaver
 emscripten
 marco
+sse2neon
+hwinfo
