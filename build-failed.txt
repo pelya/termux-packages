@@ -10,3 +10,4 @@ gcr
 netpbm
 motif
 wezterm
+python-qscintilla
