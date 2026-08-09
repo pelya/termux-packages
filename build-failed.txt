@@ -48,3 +48,4 @@ ncmpcpp
 hw-probe
 electron-for-code-oss
 pinentry-gnome3
+mogan
