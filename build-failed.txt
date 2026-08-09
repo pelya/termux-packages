@@ -30,3 +30,4 @@ audacity
 gnucash
 git-credential-manager
 gnome-calculator
+maxima
