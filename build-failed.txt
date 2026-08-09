@@ -18,3 +18,4 @@ gvfs
 code-oss
 libime
 cabal-install
+amberol
