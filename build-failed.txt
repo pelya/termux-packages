@@ -39,3 +39,4 @@ mate-control-center
 weston
 vkmark
 nemo
+fcitx5-chinese-addons
