@@ -13,3 +13,4 @@ wezterm
 python-qscintilla
 hunspell-nl
 atril
+newsboat
