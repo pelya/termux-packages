@@ -38,3 +38,4 @@ libgrpc
 mate-control-center
 weston
 vkmark
+nemo
