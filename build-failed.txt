@@ -20,3 +20,4 @@ libime
 cabal-install
 amberol
 libgmime
+epiphany
