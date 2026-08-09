@@ -27,3 +27,4 @@ marco
 tea
 mplayer
 audacity
+gnucash
