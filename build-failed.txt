@@ -21,3 +21,4 @@ cabal-install
 amberol
 libgmime
 epiphany
+nethack
