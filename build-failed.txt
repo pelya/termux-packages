@@ -9,3 +9,4 @@ sbcl
 gcr
 netpbm
 motif
+wezterm
