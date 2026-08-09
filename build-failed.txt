@@ -53,3 +53,4 @@ p11-kit
 cinnamon
 mercury
 notmuch
+edbrowse
