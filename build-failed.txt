@@ -40,3 +40,4 @@ weston
 vkmark
 nemo
 fcitx5-chinese-addons
+muchsync
