@@ -42,3 +42,4 @@ nemo
 fcitx5-chinese-addons
 muchsync
 hunspell-hu
+wezterm-nightly
