@@ -4,3 +4,4 @@ mu
 rofi
 gforth
 gucharmap
+wmaker
