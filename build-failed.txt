@@ -31,3 +31,4 @@ gnucash
 git-credential-manager
 gnome-calculator
 maxima
+qt5-qtlocation
