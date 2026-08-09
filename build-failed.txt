@@ -286,3 +286,4 @@ hunspell-fr
 tshark
 surfraw
 python-pyqtwebengine
+nushell
