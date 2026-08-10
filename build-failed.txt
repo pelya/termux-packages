@@ -92,3 +92,4 @@ subtitleripper
 tilix
 icewm
 ecl
+hunspell-fr
