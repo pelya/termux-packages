@@ -89,3 +89,4 @@ cjs
 sideloader
 nushell
 subtitleripper
+tilix
