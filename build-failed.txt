@@ -60,3 +60,4 @@ surf
 tcc
 pandoc
 python2
+yad
