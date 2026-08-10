@@ -75,3 +75,4 @@ alpine
 hugin
 pikiwidb
 ckermit
+angle-android
