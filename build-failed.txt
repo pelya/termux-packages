@@ -79,3 +79,4 @@ angle-android
 chocolate-doom
 mindforger
 tenacity
+hledger
