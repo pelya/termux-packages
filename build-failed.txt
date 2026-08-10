@@ -103,3 +103,4 @@ pyqt5
 hledger-ui
 yazi
 gnome-keyring
+cmusfm
