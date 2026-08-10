@@ -55,3 +55,4 @@ mercury
 notmuch
 edbrowse
 deno
+webkit2gtk-4.1
