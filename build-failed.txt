@@ -98,3 +98,4 @@ opus-tools
 codelldb
 vcsh
 neomutt
+qt5-qtwebengine
