@@ -83,3 +83,4 @@ hledger
 frobtads
 llama-cpp
 cabin
+btop
