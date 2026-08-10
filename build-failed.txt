@@ -86,3 +86,4 @@ cabin
 btop
 chromium
 cjs
+sideloader
