@@ -63,3 +63,4 @@ python2
 yad
 turbopack
 libgf2x
+morphosis
