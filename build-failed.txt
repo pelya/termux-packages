@@ -65,3 +65,4 @@ turbopack
 libgf2x
 morphosis
 codeblocks
+spek
