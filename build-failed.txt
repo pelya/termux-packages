@@ -94,3 +94,4 @@ icewm
 ecl
 hunspell-fr
 mosh
+opus-tools
