@@ -90,3 +90,4 @@ sideloader
 nushell
 subtitleripper
 tilix
+icewm
