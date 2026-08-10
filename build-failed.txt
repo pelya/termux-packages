@@ -85,3 +85,4 @@ llama-cpp
 cabin
 btop
 chromium
+cjs
