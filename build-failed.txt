@@ -82,3 +82,4 @@ tenacity
 hledger
 frobtads
 llama-cpp
+cabin
