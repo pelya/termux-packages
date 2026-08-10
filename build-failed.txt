@@ -88,3 +88,4 @@ chromium
 cjs
 sideloader
 nushell
+subtitleripper
