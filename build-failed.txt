@@ -76,3 +76,4 @@ hugin
 pikiwidb
 ckermit
 angle-android
+chocolate-doom
