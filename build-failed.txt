@@ -104,3 +104,4 @@ hledger-ui
 yazi
 gnome-keyring
 cmusfm
+swift
