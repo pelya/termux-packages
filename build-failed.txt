@@ -80,3 +80,4 @@ chocolate-doom
 mindforger
 tenacity
 hledger
+frobtads
