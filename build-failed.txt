@@ -100,3 +100,4 @@ vcsh
 neomutt
 qt5-qtwebengine
 pyqt5
+hledger-ui
