@@ -67,3 +67,4 @@ morphosis
 codeblocks
 spek
 ldc
+openimageio
