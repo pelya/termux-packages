@@ -93,3 +93,4 @@ tilix
 icewm
 ecl
 hunspell-fr
+mosh
