@@ -81,3 +81,4 @@ mindforger
 tenacity
 hledger
 frobtads
+llama-cpp
