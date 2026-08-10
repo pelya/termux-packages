@@ -74,3 +74,4 @@ smalltalk
 alpine
 hugin
 pikiwidb
+ckermit
