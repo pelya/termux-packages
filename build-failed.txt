@@ -99,3 +99,4 @@ codelldb
 vcsh
 neomutt
 qt5-qtwebengine
+pyqt5
