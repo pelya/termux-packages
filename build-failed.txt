@@ -54,3 +54,4 @@ cinnamon
 mercury
 notmuch
 edbrowse
+deno
