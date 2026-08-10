@@ -64,3 +64,4 @@ yad
 turbopack
 libgf2x
 morphosis
+codeblocks
