@@ -78,3 +78,4 @@ ckermit
 angle-android
 chocolate-doom
 mindforger
+tenacity
