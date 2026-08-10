@@ -70,3 +70,4 @@ ldc
 openimageio
 gpg-crypter
 virglrenderer-android
+smalltalk
