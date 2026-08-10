@@ -102,3 +102,4 @@ qt5-qtwebengine
 pyqt5
 hledger-ui
 yazi
+gnome-keyring
