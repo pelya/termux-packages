@@ -91,3 +91,4 @@ nushell
 subtitleripper
 tilix
 icewm
+ecl
