@@ -61,3 +61,4 @@ tcc
 pandoc
 python2
 yad
+turbopack
