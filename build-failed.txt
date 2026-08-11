@@ -122,3 +122,4 @@ cccc
 python-pyqtwebengine
 carbonyl
 emscripten
+pypy
