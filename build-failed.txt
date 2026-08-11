@@ -110,3 +110,4 @@ libntl
 openscad
 telegram-desktop
 wxmaxima
+kate
