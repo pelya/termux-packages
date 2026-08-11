@@ -111,3 +111,4 @@ openscad
 telegram-desktop
 wxmaxima
 kate
+mutter
