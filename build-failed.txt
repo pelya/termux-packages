@@ -106,3 +106,4 @@ gnome-keyring
 cmusfm
 swift
 hwinfo
+libntl
