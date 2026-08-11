@@ -114,3 +114,4 @@ kate
 mutter
 gcr4
 spidermonkey
+rust
