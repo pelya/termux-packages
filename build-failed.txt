@@ -117,3 +117,4 @@ spidermonkey
 rust
 openvdb
 codon
+awscli
