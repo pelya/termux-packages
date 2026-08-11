@@ -108,3 +108,4 @@ swift
 hwinfo
 libntl
 openscad
+telegram-desktop
