@@ -109,3 +109,4 @@ hwinfo
 libntl
 openscad
 telegram-desktop
+wxmaxima
