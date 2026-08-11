@@ -120,3 +120,4 @@ codon
 awscli
 cccc
 python-pyqtwebengine
+carbonyl
