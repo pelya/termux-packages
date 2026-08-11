@@ -107,3 +107,4 @@ cmusfm
 swift
 hwinfo
 libntl
+openscad
