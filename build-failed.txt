@@ -112,3 +112,4 @@ telegram-desktop
 wxmaxima
 kate
 mutter
+gcr4
