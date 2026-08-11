@@ -105,3 +105,4 @@ yazi
 gnome-keyring
 cmusfm
 swift
+hwinfo
