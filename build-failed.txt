@@ -119,3 +119,4 @@ openvdb
 codon
 awscli
 cccc
+python-pyqtwebengine
