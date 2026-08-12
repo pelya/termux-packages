@@ -123,3 +123,4 @@ python-pyqtwebengine
 carbonyl
 emscripten
 pypy
+openfoam
