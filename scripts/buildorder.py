@@ -90,6 +90,7 @@ def parse_build_file_dependencies(path):
         'fontconfig',
         'expat',
         'catch2',
+        'libandroid-execinfo',
     ]:
         if f'lib{lib}' in deps and f'lib{lib}-static' not in deps:
             deps.add(f'lib{lib}-static')
