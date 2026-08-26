@@ -576,14 +576,13 @@ jobs:
 
     - name: Upload source archives to source mirror
       env:
-        GH_TOKEN: ${{ secrets.TERMUXBOT2_TOKEN }}
+        GH_TOKEN: ${{ github.token }}
       run: |
-        if [ -d "source" ]; then
-          cd "source"
-          for source_file in *; do
-            mirror_name="$(../scripts/build/get_source/termux_download_source_mirror.sh --mirror-name ${source_file})"
-            echo "Uploading ${source_file} to ${mirror_name}"
-            gh release upload --clobber "${mirror_name}" "${source_file}"
-          done
-          cd ..
-        fi
+        [ -d "source" ] || exit 0
+        cd "source"
+        for source_file in *; do
+          mirror_name="$(../scripts/build/get_source/termux_download_source_mirror.sh --mirror-name "${source_file}")"
+          echo "Uploading ${source_file} to ${mirror_name}"
+          gh release upload --clobber "${mirror_name}" "${source_file}"
+        done
+        cd ..
